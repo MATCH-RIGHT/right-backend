@@ -3,8 +3,12 @@ package com.example.rightbackend.global.response.success;
 import org.springframework.http.HttpStatus;
 
 public enum MemberSuccess implements SuccessCode {
-    SING_UP_SUCCESS(HttpStatus.OK, "M001", "회원가입이 완료되었습니다."),
-    WITH_DRAW_SUCCESS(HttpStatus.OK, "M002", "회원 탈퇴가 완료되었습니다."),
+    SIGN_UP_SUCCESS(HttpStatus.OK, "M001", "회원가입이 완료되었습니다"),
+    CHECK_ID_SUCCESS(HttpStatus.OK, "M002", "사용 할 수 있는 아이디입니다"),
+    GET_MEMBER_PAGE_SUCCESS(HttpStatus.OK, "M003", "회원 페이지 조회를 완료했습니다"),
+    MEMBER_PAGE_CHANGE_SUCCESS(HttpStatus.OK, "M004", "회원 페이지 변경이 완료했습니다"),
+    SEARCH_ID_SUCCESS(HttpStatus.OK, "M005", "아이디 조회를 완료했습니다"),
+    CHANGE_PASSWORD_SUCCESS(HttpStatus.OK, "M006", "비밀번호 완료했습니다"),
 
     ;
 
