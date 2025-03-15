@@ -1,6 +1,8 @@
 package com.example.rightbackend.member.controller.dto.request;
 
-public record SignUpRequest (
+import java.util.List;
+
+public record SignUpRequest (String name,
                              String provider,
                              String providerId,
                              String password,
@@ -12,5 +14,6 @@ public record SignUpRequest (
                              String height,
                              String body_type,
                              String job,
+                             List<String> interests,
                              String myself){
 }
