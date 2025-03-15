@@ -1,26 +1,32 @@
 package com.example.rightbackend.global;
 
 import com.example.rightbackend.auth.domain.Member;
+import com.example.rightbackend.auth.domain.Token;
 import com.example.rightbackend.auth.domain.repository.MemberRepository;
+import com.example.rightbackend.auth.domain.repository.TokenRepository;
+import com.example.rightbackend.auth.service.TokenProvider;
 import com.example.rightbackend.member.controller.dto.EncodeMember;
 import com.example.rightbackend.member.controller.dto.EncodeMemberProfile;
-import com.example.rightbackend.member.controller.dto.EncodeSignUp;
+import com.example.rightbackend.member.domain.Interest;
 import com.example.rightbackend.member.domain.MemberProfile;
+import com.example.rightbackend.member.domain.MemberProfileToInterest;
+import com.example.rightbackend.member.domain.repository.InterestRepository;
 import com.example.rightbackend.member.domain.repository.MemberProfileRepository;
 import com.example.rightbackend.member.service.TextEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class DummyGenerator {
     @Autowired MemberRepository memberRepository;
     @Autowired MemberProfileRepository memberProfileRepository;
+    @Autowired InterestRepository interestRepository;
     @Autowired TextEncoder textEncoder;
 
-    public static final String GIVEN_PROVIDER = "tmp";
+    public static final String GIVEN_NAME = "tmpName";
+    public static final String GIVEN_PROVIDER = "tmpProvider";
     public static final String GIVEN_PROVIDER_ID = "tmpID";
     public static final String GIVEN_PASSWORD = "tmpPassword";
     public static final String GIVEN_PHONE_NUMBER = "010-1234-5678";
@@ -34,6 +40,12 @@ public class DummyGenerator {
     public static final String GIVEN_MONEY = "0";
     public static final String GIVEN_MYSELF = "hello world";
 
+    public static final List<String> GIVEN_INTERESTS = List.of("READING", "TRAVELING", "CODING");
+    @Autowired
+    private TokenProvider tokenProvider;
+    @Autowired
+    private TokenRepository tokenRepository;
+
     public Member generateSingleMember() {
         Member member = makeMember();
         saveMemberProfile(member);
@@ -41,7 +53,7 @@ public class DummyGenerator {
     }
 
     private Member makeMember() {
-        EncodeMember signUp = new EncodeMember(GIVEN_PROVIDER, GIVEN_PROVIDER_ID, GIVEN_PASSWORD,GIVEN_PHONE_NUMBER);
+        EncodeMember signUp = new EncodeMember(GIVEN_NAME, GIVEN_PROVIDER, GIVEN_PROVIDER_ID, GIVEN_PASSWORD,GIVEN_PHONE_NUMBER);
         return memberRepository.save(Member.of(signUp));
     }
 
@@ -54,13 +66,35 @@ public class DummyGenerator {
                 TextEncoder.encrypt(GIVEN_HEIGHT),
                 TextEncoder.encrypt(GIVEN_BODY_TYPE),
                 TextEncoder.encrypt(GIVEN_JOB),
+                GIVEN_INTERESTS,
                 TextEncoder.encrypt(GIVEN_MONEY),
                 TextEncoder.encrypt(GIVEN_MYSELF));
 
         MemberProfile memberProfile = MemberProfile.of(encodeMemberProfile, member);
+
+        addInterestsToMemberProfile(memberProfile, GIVEN_INTERESTS);
+
         memberProfileRepository.save(memberProfile);
         member.setMemberProfile(memberProfile);
         memberRepository.save(member);
     }
 
+    private void addInterestsToMemberProfile(MemberProfile memberProfile, List<String> interests) {
+        if(interests == null || interests.isEmpty()) {
+            return;
+        }
+        for(String interestName: interests) {
+            Interest interest = interestRepository.findByName(interestName).orElseGet(() -> interestRepository.save(Interest.of(interestName)));
+            MemberProfileToInterest link = MemberProfileToInterest.of(memberProfile, interest);
+            memberProfile.addInterest(interest);
+        }
+    }
+
+    public String generateAccessToken(Member member) {
+        String accessToken = tokenProvider.generateAccessToken(member.getLoginMember());
+        Token refreshToken = new Token(member);
+        refreshToken.setRefreshToken(accessToken);
+        tokenRepository.save(refreshToken);
+        return accessToken;
+    }
 }
