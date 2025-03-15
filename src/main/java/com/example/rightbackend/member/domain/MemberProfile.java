@@ -1,13 +1,19 @@
 package com.example.rightbackend.member.domain;
 
 import com.example.rightbackend.auth.domain.Member;
+import com.example.rightbackend.member.controller.dto.EncodeMemberPage;
 import com.example.rightbackend.member.controller.dto.EncodeMemberProfile;
 import lombok.Getter;
 import lombok.Setter;
 import jakarta.persistence.*;
 import org.springframework.data.domain.Persistable;
 
-@Entity @Table(name = "member_profile")
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Entity
+@Table(name = "member_profile")
 @Getter @Setter
 public class MemberProfile implements Persistable<Long> {
 
@@ -36,6 +42,9 @@ public class MemberProfile implements Persistable<Long> {
     @Column
     private String job;
 
+    @OneToMany(mappedBy = "memberProfile", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MemberProfileToInterest> memberProfileToInterests = new ArrayList<>();
+
     @Column
     private String money = "0";
 
@@ -57,6 +66,18 @@ public class MemberProfile implements Persistable<Long> {
         memberProfile.job = request.job();
         memberProfile.myself = request.myself();
         return memberProfile;
+    }
+
+    public EncodeMemberPage getMemberPage() {
+        List<String> interests = memberProfileToInterests.stream()
+                .map(link -> link.getInterest().getName())
+                .collect(Collectors.toList());
+        return new EncodeMemberPage(nickname, address, height, body_type, job, interests, myself);
+    }
+
+    public void addInterest(Interest interest) {
+        MemberProfileToInterest link = MemberProfileToInterest.of(this, interest);
+        this.memberProfileToInterests.add(link);
     }
 
     @Override
