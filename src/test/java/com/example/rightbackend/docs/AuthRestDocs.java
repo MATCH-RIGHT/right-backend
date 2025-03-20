@@ -10,9 +10,11 @@ import org.junit.jupiter.api.Test;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AuthRestDocs extends BaseRestDocsTest {
@@ -101,6 +103,9 @@ public class AuthRestDocs extends BaseRestDocsTest {
                 .header("Authorization",  GIVEN_ACCESS_TOKEN))
                 .andExpect(status().isOk())
                 .andDo(document("auth-withdraw",
+                        requestHeaders(
+                                headerWithName("Authorization").description("액세스 토큰")
+                        ),
                         responseFields(
                                 fieldWithPath("code").description("성공 코드"),
                                 fieldWithPath("result").description("회원 탈퇴 결과")
