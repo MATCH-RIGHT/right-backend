@@ -15,9 +15,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
-import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -96,9 +94,6 @@ public class MemberProfileDocs extends BaseRestDocsTest {
                         .header("Authorization", GIVEN_ACCESS_TOKEN))
                 .andExpect(status().isOk())
                 .andDo(document("member-get-member-page",
-                        requestHeaders(
-                                headerWithName("Authorization").description("액세스 토큰")
-                        ),
                         responseFields(
                                 fieldWithPath("code").description("응답 코드"),
                                 fieldWithPath("result.name").description("이름"),
