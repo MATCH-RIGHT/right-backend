@@ -1,22 +1,25 @@
 package com.example.rightbackend.global.config;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-@OpenAPIDefinition
-public class OpenApiConfig {
+public class OpenApiConfig implements WebMvcConfigurer {
 
     @Bean
     public OpenAPI openAPI() {
         Info info = new Info()
                 .title("라잇")
                 .version("V1")
-                .description("Chill application");
+                .description("Chill meeting application");
 
         return new OpenAPI()
+                .components(new Components())
                 .info(info);
     }
 }
