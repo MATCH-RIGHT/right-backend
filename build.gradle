@@ -70,6 +70,16 @@ dependencies {
 
 	// coolSMS
 	implementation 'net.nurigo:sdk:4.3.0'
+
+	// S3
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+	testImplementation 'io.findify:s3mock_2.13:0.2.6'
+
+	// Logback
+	implementation 'ch.qos.logback.contrib:logback-json-classic:0.1.5'
+	implementation 'ch.qos.logback.contrib:logback-jackson:0.1.5'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+	implementation 'net.logstash.logback:logstash-logback-encoder:7.3'
 }
 
 tasks.named('test') {
