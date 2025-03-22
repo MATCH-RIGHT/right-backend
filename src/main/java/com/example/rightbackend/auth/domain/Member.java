@@ -6,9 +6,13 @@ import com.example.rightbackend.member.controller.dto.EncodeMemberPage;
 import com.example.rightbackend.member.controller.dto.response.MemberPageResponse;
 import com.example.rightbackend.member.domain.MemberProfile;
 import com.example.rightbackend.member.service.TextEncoder;
+import com.example.rightbackend.uploader.domain.MemberImage;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -43,6 +47,10 @@ public class Member {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_profile_id")
     private MemberProfile memberProfile;
+
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @JoinColumn(name = "memberImageId")
+    private List<MemberImage> memberImage = new ArrayList<>();
 
     public LoginMember getLoginMember() {
         return new LoginMember(id, role);
