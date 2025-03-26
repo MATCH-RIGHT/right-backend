@@ -11,7 +11,7 @@ public enum MemberSuccess implements SuccessCode {
     CHANGE_PASSWORD_SUCCESS(HttpStatus.OK, "M006", "비밀번호 완료했습니다"),
     IMAGE_UPLOAD_SUCCESS(HttpStatus.OK, "M007", "이미지 업로드를 완료했습니다"),
     IMAGE_DELETE_SUCCESS(HttpStatus.OK, "M008", "이미지 삭제를 완료했습니다"),
-
+    IMAGE_CHANGE_SUCCESS(HttpStatus.OK, "M009", "이미지 변경을 완료했습니다"),
     ;
 
     private final HttpStatus httpStatus;
