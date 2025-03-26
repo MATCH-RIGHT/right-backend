@@ -3,6 +3,7 @@ package com.example.rightbackend.docs;
 import com.example.rightbackend.auth.controller.AuthController;
 import com.example.rightbackend.auth.domain.Member;
 import com.example.rightbackend.global.DummyGenerator;
+import com.example.rightbackend.image.controller.ImageController;
 import com.example.rightbackend.member.controller.MemberController;
 import com.example.rightbackend.sms.controller.SmsController;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,6 +27,8 @@ public abstract class BaseRestDocsTest {
     protected MemberController memberController;
     @SpyBean
     protected SmsController smsController;
+    @SpyBean
+    protected ImageController imageController;
 
     @Autowired
     protected MockMvc mockMvc;
