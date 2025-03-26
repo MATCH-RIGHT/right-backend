@@ -1,4 +1,4 @@
-package com.example.rightbackend.uploader.controller.dto;
+package com.example.rightbackend.image.controller.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 

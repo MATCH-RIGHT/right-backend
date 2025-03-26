@@ -1,7 +1,7 @@
-package com.example.rightbackend.uploader.domain;
+package com.example.rightbackend.image.domain;
 
 import com.example.rightbackend.auth.domain.Member;
-import com.example.rightbackend.uploader.controller.dto.S3File;
+import com.example.rightbackend.image.controller.dto.S3File;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

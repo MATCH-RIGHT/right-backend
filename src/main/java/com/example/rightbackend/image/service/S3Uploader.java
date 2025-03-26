@@ -1,11 +1,11 @@
-package com.example.rightbackend.uploader.service;
+package com.example.rightbackend.image.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.example.rightbackend.global.exception.RestApiException;
 import com.example.rightbackend.global.properties.S3Properties;
 import com.example.rightbackend.global.response.error.ImageError;
-import com.example.rightbackend.uploader.controller.dto.S3File;
+import com.example.rightbackend.image.controller.dto.S3File;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -62,7 +62,7 @@ public class S3Uploader {
     private void checkFileFormat(MultipartFile file) {
         String extension = StringUtils.getFilenameExtension(file.getOriginalFilename());
         if(!extension.equalsIgnoreCase(PNG_FILE_EXTENSION) &&
-                !extension.equalsIgnoreCase(JPG_FILE_EXTENSION) &&
+                !extension.equalsIgnoreCase(JPEG_FILE_EXTENSION) &&
                 !extension.equalsIgnoreCase(GIF_FILE_EXTENSION) &&
                 !extension.equalsIgnoreCase(JPG_FILE_EXTENSION)) {
             throw new RestApiException(ImageError.IMAGE_FORMAT_ERROR);
