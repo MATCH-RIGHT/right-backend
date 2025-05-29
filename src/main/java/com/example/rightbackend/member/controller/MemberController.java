@@ -1,7 +1,6 @@
 package com.example.rightbackend.member.controller;
 
 import com.example.rightbackend.auth.controller.dto.LoginMember;
-import com.example.rightbackend.auth.domain.Member;
 import com.example.rightbackend.global.config.resolver.Login;
 import com.example.rightbackend.global.response.SuccessResponse;
 import com.example.rightbackend.global.response.success.MemberSuccess;
@@ -9,12 +8,19 @@ import com.example.rightbackend.member.controller.dto.request.CheckIdRequest;
 import com.example.rightbackend.member.controller.dto.request.ResetPasswordRequest;
 import com.example.rightbackend.member.controller.dto.request.SearchIdRequest;
 import com.example.rightbackend.member.controller.dto.request.SignUpRequest;
+import com.example.rightbackend.member.controller.dto.response.InterestListResponse;
+import com.example.rightbackend.member.controller.dto.response.LocationListResponse;
 import com.example.rightbackend.member.controller.dto.response.MemberPageResponse;
+import com.example.rightbackend.member.domain.Interest;
+import com.example.rightbackend.member.domain.Location;
+import com.example.rightbackend.member.controller.dto.request.UpdateProfileRequest;
 import com.example.rightbackend.member.service.MemberProfileService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/member")
+import java.util.List;
+
+@RequestMapping("/api/member")
 @RestController
 public class MemberController {
     private final MemberProfileService memberProfileService;
@@ -33,7 +39,7 @@ public class MemberController {
         return SuccessResponse.of(MemberSuccess.CHECK_ID_SUCCESS, memberProfileService.checkDuplicateId(givenId));
     }
 
-    @GetMapping("/member-page")
+    @GetMapping("/get-profile")
     public ResponseEntity<SuccessResponse<MemberPageResponse>> getMemberPage(@Login LoginMember loginMember) {
         return SuccessResponse.of(
                 MemberSuccess.GET_MEMBER_PAGE_SUCCESS,
@@ -48,5 +54,22 @@ public class MemberController {
     @PostMapping("/reset-password")
     public ResponseEntity<SuccessResponse<String>> resetPassword(@RequestBody ResetPasswordRequest request) {
         return SuccessResponse.of(MemberSuccess.CHANGE_PASSWORD_SUCCESS, memberProfileService.resetPassword(request));
+    }
+
+    @GetMapping("/interests")
+    public ResponseEntity<SuccessResponse<InterestListResponse>> getAllInterests() {
+        List<Interest> interests = memberProfileService.getAllInterests();
+        return SuccessResponse.of(MemberSuccess.GET_INTERESTS_SUCCESS, InterestListResponse.from(interests));
+    }
+    
+    @GetMapping("/locations")
+    public ResponseEntity<SuccessResponse<LocationListResponse>> getAllLocations() {
+        List<Location> locations = memberProfileService.getAllLocations();
+        return SuccessResponse.of(MemberSuccess.GET_LOCATIONS_SUCCESS, LocationListResponse.from(locations));
+    }
+    
+    @PutMapping("/update-profile")
+    public ResponseEntity<SuccessResponse<String>> updateProfile(@Login LoginMember loginMember, @RequestBody UpdateProfileRequest request) {
+        return SuccessResponse.of(MemberSuccess.UPDATE_PROFILE_SUCCESS, memberProfileService.updateProfile(loginMember, request));
     }
 }
