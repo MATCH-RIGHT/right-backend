@@ -16,10 +16,13 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
+@Table(name = "member", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_member_name_phone", columnNames = {"name", "phoneNumber"})
+})
 public class Member {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_Id")
+    @Column(name = "memberId")
     private Long id;
 
     @Column
@@ -44,8 +47,8 @@ public class Member {
     @Column
     private Boolean withdraw = false;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_profile_id")
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "memberProfileId")
     private MemberProfile memberProfile;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
@@ -60,7 +63,7 @@ public class Member {
         EncodeMemberPage encodeMemberPage = memberProfile.getMemberPage();
         return new MemberPageResponse(name,
                 encodeMemberPage.nickname(),
-                TextEncoder.decrypt(encodeMemberPage.address()),
+                TextEncoder.decrypt(encodeMemberPage.locationName()),
                 TextEncoder.decrypt(encodeMemberPage.height()),
                 TextEncoder.decrypt(encodeMemberPage.body_type()),
                 TextEncoder.decrypt(encodeMemberPage.job()),
@@ -73,6 +76,7 @@ public class Member {
 
     public static Member of(final EncodeMember request) {
         Member member = new Member();
+        member.name = request.name();
         member.provider = request.provider();
         member.providerId = request.providerId();
         member.password = request.password();

@@ -6,12 +6,12 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Entity @Table(name = "jwt_token")
+@Entity @Table(name = "jwtToken")
 @Getter @Setter
 public class Token {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "jwt_token_id")
+    @Column(name = "jwtTokenId")
     private Long id;
 
     @Column
@@ -24,7 +24,7 @@ public class Token {
     private boolean isExpired = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "memberId")
     private Member member;
 
     protected Token() {
