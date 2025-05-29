@@ -3,8 +3,15 @@ package com.example.rightbackend.docs;
 import com.example.rightbackend.auth.controller.AuthController;
 import com.example.rightbackend.auth.domain.Member;
 import com.example.rightbackend.global.DummyGenerator;
+import com.example.rightbackend.global.config.loader.FaceFeatureDataLoader;
+import com.example.rightbackend.global.config.loader.InterestDataLoader;
+import com.example.rightbackend.global.config.loader.LocationDataLoader;
 import com.example.rightbackend.image.controller.ImageController;
+import com.example.rightbackend.matching.business.controller.MatchingController;
+import com.example.rightbackend.matching.filter.controller.MatchingFilterController;
 import com.example.rightbackend.member.controller.MemberController;
+import com.example.rightbackend.member.domain.repository.InterestRepository;
+import com.example.rightbackend.member.domain.repository.LocationRepository;
 import com.example.rightbackend.sms.controller.SmsController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +36,20 @@ public abstract class BaseRestDocsTest {
     protected SmsController smsController;
     @SpyBean
     protected ImageController imageController;
+    @SpyBean
+    protected MatchingFilterController matchingFilterController;
+    @SpyBean
+    protected InterestDataLoader interestDataLoader;
+    @SpyBean
+    protected InterestRepository interestRepository;
+    @SpyBean
+    protected LocationDataLoader locationDataLoader;
+    @SpyBean
+    protected LocationRepository locationRepository;
+    @SpyBean
+    protected FaceFeatureDataLoader faceFeatureDataLoader;
+    @SpyBean
+    protected MatchingController matchingController;
 
     @Autowired
     protected MockMvc mockMvc;
@@ -41,7 +62,19 @@ public abstract class BaseRestDocsTest {
 
     @BeforeEach
     void setUp() {
-        member = dummyGenerator.generateSingleMember();
-        GIVEN_ACCESS_TOKEN = dummyGenerator.generateAccessToken(member);
+        try {
+            try {
+                interestDataLoader.loadInterestData();
+                locationDataLoader.loadLocationData();
+                faceFeatureDataLoader.loadFaceFeatureData();
+            } catch (Exception e) {
+                System.out.println("데이터 로딩 중 오류 발생: " + e.getMessage());
+            }
+            
+            member = dummyGenerator.generateSingleMember();
+            GIVEN_ACCESS_TOKEN = dummyGenerator.generateAccessToken(member);
+        } catch (Exception e) {
+            System.out.println("setUp 중 오류 발생: " + e.getMessage());
+        }
     }
 }
