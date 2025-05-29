@@ -1,0 +1,98 @@
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-matching]]
+== Matching
+
+[[resources-matching-free]]
+=== 무료 매칭
+
+==== HTTP request
+
+include::{snippets}/matching-free-execute/http-request.adoc[]
+
+==== request-header 설명
+include::{snippets}/matching-free-execute/request-headers.adoc[]
+
+==== HTTP response
+
+include::{snippets}/matching-free-execute/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/matching-free-execute/response-fields.adoc[]
+
+
+[[resources-matching-premium]]
+=== 유료 매칭
+
+==== HTTP request
+
+include::{snippets}/matching-premium-execute/http-request.adoc[]
+
+==== request-header 설명
+include::{snippets}/matching-premium-execute/request-headers.adoc[]
+
+==== HTTP response
+
+include::{snippets}/matching-premium-execute/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/matching-premium-execute/response-fields.adoc[]
+
+
+[[resources-matching-active]]
+=== 활성 매칭 조회
+
+==== HTTP request
+
+include::{snippets}/matching-active-list/http-request.adoc[]
+
+==== request-header 설명
+include::{snippets}/matching-active-list/request-headers.adoc[]
+
+==== HTTP response
+
+include::{snippets}/matching-active-list/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/matching-active-list/response-fields.adoc[]
+
+
+[[resources-matching-matched]]
+=== 매칭 결과 조회
+
+==== HTTP request
+
+include::{snippets}/matching-matched-list/http-request.adoc[]
+
+==== request-header 설명
+include::{snippets}/matching-matched-list/request-headers.adoc[]
+
+==== HTTP response
+
+include::{snippets}/matching-matched-list/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/matching-matched-list/response-fields.adoc[]
+
+
+[[resources-matching-like]]
+=== 매칭 좋아요
+
+==== HTTP request
+
+include::{snippets}/matching-like/http-request.adoc[]
+
+==== request-header 설명
+include::{snippets}/matching-like/request-headers.adoc[]
+
+==== path-parameters 설명
+include::{snippets}/matching-like/path-parameters.adoc[]
+
+==== HTTP response
+
+include::{snippets}/matching-like/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/matching-like/response-fields.adoc[]

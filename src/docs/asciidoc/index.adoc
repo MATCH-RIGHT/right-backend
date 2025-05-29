@@ -1,0 +1,552 @@
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-post]]
+== Authentication
+
+[[resources-post-create]]
+=== 로그인 시도
+
+==== HTTP request
+
+include::{snippets}/auth-login/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/auth-login/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/auth-login/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/auth-login/response-fields.adoc[]
+
+
+
+=== 로그아웃
+
+==== HTTP request
+
+include::{snippets}/auth-logout/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/auth-logout/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/auth-logout/http-response.adoc[]
+
+
+
+
+=== 토큰재발급
+
+==== HTTP request
+
+include::{snippets}/auth-reissue/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/auth-reissue/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/auth-reissue/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/auth-reissue/response-fields.adoc[]
+
+
+=== 회원탈퇴
+
+==== HTTP request
+
+include::{snippets}/auth-withdraw/http-request.adoc[]
+
+==== request-header 설명
+include::{snippets}/auth-withdraw/request-headers.adoc[]
+
+==== HTTP response
+
+include::{snippets}/auth-withdraw/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/auth-withdraw/response-fields.adoc[]
+
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-member]]
+== Member
+
+[[resources-member-signup]]
+=== 회원가입
+
+==== HTTP request
+
+include::{snippets}/member-signUp/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/member-signUp/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/member-signUp/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/member-signUp/response-fields.adoc[]
+
+
+[[resources-member-check-id]]
+=== 아이디 중복 확인
+
+==== HTTP request
+
+include::{snippets}/member-checkId/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/member-checkId/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/member-checkId/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/member-checkId/response-fields.adoc[]
+
+
+[[resources-member-search-id]]
+=== 아이디 찾기
+
+==== HTTP request
+
+include::{snippets}/member-search-id/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/member-search-id/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/member-search-id/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/member-search-id/response-fields.adoc[]
+
+
+[[resources-member-reset-password]]
+=== 비밀번호 재설정
+
+==== HTTP request
+
+include::{snippets}/member-reset-password/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/member-reset-password/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/member-reset-password/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/member-reset-password/response-fields.adoc[]
+
+
+[[resources-member-update-profile]]
+=== 프로필 업데이트
+
+==== HTTP request
+
+include::{snippets}/member-update-profile/http-request.adoc[]
+
+==== request-header 설명
+include::{snippets}/member-update-profile/request-headers.adoc[]
+
+==== request-body 설명
+include::{snippets}/member-update-profile/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/member-update-profile/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/member-update-profile/response-fields.adoc[]
+
+
+[[resources-member-get-member-page]]
+=== 회원 페이지 조회
+
+==== HTTP request
+
+include::{snippets}/member-get-member-page/http-request.adoc[]
+
+==== request-header 설명
+include::{snippets}/member-get-member-page/request-headers.adoc[]
+
+==== HTTP response
+
+include::{snippets}/member-get-member-page/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/member-get-member-page/response-fields.adoc[]
+
+
+[[resources-member-get-interests]]
+=== 관심사 목록 조회
+
+==== HTTP request
+
+include::{snippets}/member-get-interests/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/member-get-interests/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/member-get-interests/response-fields.adoc[]
+
+
+[[resources-member-get-locations]]
+=== 지역 목록 조회
+
+==== HTTP request
+
+include::{snippets}/member-get-locations/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/member-get-locations/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/member-get-locations/response-fields.adoc[]
+
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-face-feature]]
+== Face Feature
+
+[[resources-face-feature-upload]]
+=== 얼굴 특징 업로드
+
+==== HTTP request
+
+==== request-header 설명
+include::{snippets}/feature-upload/request-headers.adoc[]
+
+==== request-part 설명
+include::{snippets}/feature-upload/request-parts.adoc[]
+
+==== HTTP response
+
+include::{snippets}/feature-upload/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/feature-upload/response-fields.adoc[]
+
+
+[[resources-face-feature-get]]
+=== 얼굴 특징 조회
+
+==== HTTP request
+
+include::{snippets}/feature-get/http-request.adoc[]
+
+==== request-header 설명
+include::{snippets}/feature-get/request-headers.adoc[]
+
+==== HTTP response
+
+include::{snippets}/feature-get/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/feature-get/response-fields.adoc[]
+
+
+[[resources-face-features-get-all]]
+=== 모든 얼굴 특징 조회
+
+==== HTTP request
+
+include::{snippets}/face-features-get-all/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/face-features-get-all/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/face-features-get-all/response-fields.adoc[]
+
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-sms]]
+== SMS
+
+[[resources-sms-send]]
+=== SMS 발송
+
+==== HTTP request
+
+include::{snippets}/sms-send/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/sms-send/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/sms-send/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/sms-send/response-fields.adoc[]
+
+
+[[resources-sms-confirm]]
+=== SMS 인증 확인
+
+==== HTTP request
+
+include::{snippets}/sms-confirm/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/sms-confirm/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/sms-confirm/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/sms-confirm/response-fields.adoc[]
+
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-image]]
+== Image
+
+[[resources-image-upload]]
+=== 이미지 업로드
+
+==== HTTP request
+
+include::{snippets}/image-upload/http-request.adoc[]
+
+==== request-header 설명
+include::{snippets}/image-upload/request-headers.adoc[]
+
+==== request-parts 설명
+include::{snippets}/image-upload/request-parts.adoc[]
+
+==== HTTP response
+
+include::{snippets}/image-upload/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/image-upload/response-fields.adoc[]
+
+
+[[resources-image-get-all]]
+=== 이미지 목록 조회
+
+==== HTTP request
+
+include::{snippets}/image-get-all/http-request.adoc[]
+
+==== request-header 설명
+include::{snippets}/image-get-all/request-headers.adoc[]
+
+==== HTTP response
+
+include::{snippets}/image-get-all/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/image-get-all/response-fields.adoc[]
+
+
+[[resources-image-update]]
+=== 이미지 업데이트
+
+==== HTTP request
+
+include::{snippets}/image-update/http-request.adoc[]
+
+==== request-header 설명
+include::{snippets}/image-update/request-headers.adoc[]
+
+==== path-parameters 설명
+include::{snippets}/image-update/path-parameters.adoc[]
+
+==== HTTP response
+
+include::{snippets}/image-update/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/image-update/response-fields.adoc[]
+
+
+[[resources-image-delete]]
+=== 이미지 삭제
+
+==== HTTP request
+
+include::{snippets}/image-delete/http-request.adoc[]
+
+==== request-header 설명
+include::{snippets}/image-delete/request-headers.adoc[]
+
+==== path-parameters 설명
+include::{snippets}/image-delete/path-parameters.adoc[]
+
+==== HTTP response
+
+include::{snippets}/image-delete/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/image-delete/response-fields.adoc[]
+
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-matching]]
+== Matching-fliter
+
+[[resources-matching-filter-create-update]]
+=== 매칭 필터 생성/업데이트
+
+==== HTTP request
+
+include::{snippets}/matching-filter-create-update/http-request.adoc[]
+
+==== request-header 설명
+include::{snippets}/matching-filter-create-update/request-headers.adoc[]
+
+==== request-body 설명
+include::{snippets}/matching-filter-create-update/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/matching-filter-create-update/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/matching-filter-create-update/response-fields.adoc[]
+
+
+[[resources-matching-filter-get]]
+=== 매칭 필터 조회
+
+==== HTTP request
+
+include::{snippets}/matching-filter-get/http-request.adoc[]
+
+==== request-header 설명
+include::{snippets}/matching-filter-get/request-headers.adoc[]
+
+==== HTTP response
+
+include::{snippets}/matching-filter-get/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/matching-filter-get/response-fields.adoc[]
+
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-matching]]
+== Matching
+
+[[resources-matching-free]]
+=== 무료 매칭
+
+==== HTTP request
+
+include::{snippets}/matching-free-execute/http-request.adoc[]
+
+==== request-header 설명
+include::{snippets}/matching-free-execute/request-headers.adoc[]
+
+==== HTTP response
+
+include::{snippets}/matching-free-execute/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/matching-free-execute/response-fields.adoc[]
+
+
+[[resources-matching-premium]]
+=== 유료 매칭
+
+==== HTTP request
+
+include::{snippets}/matching-premium-execute/http-request.adoc[]
+
+==== request-header 설명
+include::{snippets}/matching-premium-execute/request-headers.adoc[]
+
+==== HTTP response
+
+include::{snippets}/matching-premium-execute/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/matching-premium-execute/response-fields.adoc[]
+
+
+[[resources-matching-active]]
+=== 활성 매칭 조회
+
+==== HTTP request
+
+include::{snippets}/matching-active-list/http-request.adoc[]
+
+==== request-header 설명
+include::{snippets}/matching-active-list/request-headers.adoc[]
+
+==== HTTP response
+
+include::{snippets}/matching-active-list/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/matching-active-list/response-fields.adoc[]
+
+
+[[resources-matching-matched]]
+=== 매칭 결과 조회
+
+==== HTTP request
+
+include::{snippets}/matching-matched-list/http-request.adoc[]
+
+==== request-header 설명
+include::{snippets}/matching-matched-list/request-headers.adoc[]
+
+==== HTTP response
+
+include::{snippets}/matching-matched-list/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/matching-matched-list/response-fields.adoc[]
+
+
+[[resources-matching-like]]
+=== 매칭 좋아요
+
+==== HTTP request
+
+include::{snippets}/matching-like/http-request.adoc[]
+
+==== request-header 설명
+include::{snippets}/matching-like/request-headers.adoc[]
+
+==== path-parameters 설명
+include::{snippets}/matching-like/path-parameters.adoc[]
+
+==== HTTP response
+
+include::{snippets}/matching-like/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/matching-like/response-fields.adoc[]

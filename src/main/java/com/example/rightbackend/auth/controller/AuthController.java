@@ -10,7 +10,7 @@ import com.example.rightbackend.global.response.success.AuthSuccess;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 @RestController
 public class AuthController {
     private final AuthService authService;

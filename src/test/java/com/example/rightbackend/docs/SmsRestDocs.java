@@ -26,7 +26,7 @@ public class SmsRestDocs extends BaseRestDocsTest {
 
         doReturn(response).when(smsController).sendSms(any());
 
-        this.mockMvc.perform(post("/sms/send")
+        this.mockMvc.perform(post("/api/sms/send")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -50,7 +50,7 @@ public class SmsRestDocs extends BaseRestDocsTest {
 
         doReturn(response).when(smsController).SmsVerification(any());
 
-        this.mockMvc.perform(post("/sms/confirm")
+        this.mockMvc.perform(post("/api/sms/confirm")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())

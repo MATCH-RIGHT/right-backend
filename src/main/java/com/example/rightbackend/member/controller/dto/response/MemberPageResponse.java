@@ -8,6 +8,8 @@ public record MemberPageResponse (String name,
                                   String height,
                                   String body_type,
                                   String job,
-                                  List<String> interests,
+                                  List<InterestDto> interests,
                                   String myself){
+    
+    public record InterestDto(Long id, String name) {}
 }

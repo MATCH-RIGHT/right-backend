@@ -8,7 +8,8 @@ public enum TokenError implements ErrorCode {
     EXPIRED_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED,"T2", "만료 된 AccessToken 입니다"),
     EXPIRED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "T3", "만료 된 RefreshToken 입니다"),
     NULL_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED,"T4", "존재하지 않은 RefreshToken 입니다"),
-    NOT_ACCESS_TOKEN_FOR_REISSUE(HttpStatus.BAD_REQUEST,"T5","재발급하기에는 유효기간이 남은 AccessToken 입니다");;
+    NOT_ACCESS_TOKEN_FOR_REISSUE(HttpStatus.BAD_REQUEST,"T5","재발급하기에는 유효기간이 남은 AccessToken 입니다"),
+    MISSING_CREDENTIALS(HttpStatus.BAD_REQUEST,"T6","Authorization 헤더가 존재하지 않습니다");
 
     private final HttpStatus httpStatus;
     private final String code;

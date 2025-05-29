@@ -6,22 +6,21 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
-@Table(name = "member_profile_to_interest")
+@Table(name = "memberProfileToInterest")
 public class MemberProfileToInterest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_profile_to_interest_id")
+    @Column(name = "memberProfileToInterestId")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "member_profile_id")
+    @JoinColumn(name = "memberProfileId")
     private MemberProfile memberProfile;
 
     @ManyToOne
-    @JoinColumn(name = "interest_name")
+    @JoinColumn(name = "interest_id")
     private Interest interest;
-
 
     protected MemberProfileToInterest() {}
 
