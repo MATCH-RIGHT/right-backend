@@ -7,10 +7,6 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.example.rightbackend.global.properties.S3Properties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.rekognition.RekognitionClient;
 
 @Configuration
 public class AWSConfig {
@@ -27,19 +23,6 @@ public class AWSConfig {
         return (AmazonS3Client) AmazonS3ClientBuilder.standard()
                 .withRegion(s3Properties.getRegion())
                 .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
-                .build();
-    }
-
-    @Bean
-    public RekognitionClient rekognitionClient() {
-        AwsBasicCredentials awsCreds = AwsBasicCredentials.create(
-                s3Properties.getAccessKey(),
-                s3Properties.getSecretKey()
-        );
-
-        return RekognitionClient.builder()
-                .region(Region.of(s3Properties.getRegion()))
-                .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
                 .build();
     }
 }

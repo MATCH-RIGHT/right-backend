@@ -22,7 +22,6 @@ bin/
 
 ### IntelliJ IDEA ###
 .idea
-.windsurf
 *.iws
 *.iml
 *.ipr

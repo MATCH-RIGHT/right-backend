@@ -9,13 +9,10 @@ import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.*;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Component
 public class TokenProvider {
-
-    private static final String BEARER_PREFIX = "Bearer ";
 
     private JWTProperties jwtProperties;
 
@@ -26,7 +23,7 @@ public class TokenProvider {
     // AccessToken
     public String generateAccessToken(final LoginMember loginMember) {
         Claims claims = getClaimsFrom(loginMember);
-        return BEARER_PREFIX + getTokenFrom(claims, jwtProperties.getAccessTokenValidTime());
+        return getTokenFrom(claims, jwtProperties.getAccessTokenValidTime());
     }
 
     private Claims getClaimsFrom(final LoginMember loginMember) {
@@ -43,7 +40,7 @@ public class TokenProvider {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + TokenValidTime))
-                .signWith(Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes(StandardCharsets.UTF_8)), SignatureAlgorithm.HS256)
+                .signWith(Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes()), SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -61,12 +58,13 @@ public class TokenProvider {
         return claims;
     }
 
+
     public LoginMember getLoginFromToken(final String token) {
         try{
             Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(Keys.hmacShaKeyFor(jwtProperties.getBytesSecretKey()))
+                    .setSigningKey(Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes()))
                     .build()
-                    .parseClaimsJws(removeTokenPrefix(token))
+                    .parseClaimsJws(token)
                     .getBody();
             return new LoginMember(Long.parseLong(String.valueOf(claims.get("memberId"))), MemberRole.of((Integer)claims.get("role")));
         } catch (ExpiredJwtException e){
@@ -77,23 +75,21 @@ public class TokenProvider {
     }
 
     private String removeTokenPrefix(final String token) {
-        if (token != null && token.startsWith(BEARER_PREFIX)) {
+        if (token.startsWith("Bearer ")) {
             return token.substring(7);
         }
         return token;
     }
 
     public boolean isNotExpiredToken(final String token) {
-        String cleanToken = removeTokenPrefix(token);
-        if (cleanToken == null) return false;
         try {
             return Jwts.parserBuilder()
-                    .setSigningKey(Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes(StandardCharsets.UTF_8)))
+                    .setSigningKey(Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes()))
                     .build()
-                    .parseClaimsJws(cleanToken)
+                    .parseClaimsJws(token)
                     .getBody()
                     .getExpiration()
-                    .after(new Date());
+                    .before(new Date());
         } catch (ExpiredJwtException e) {
             return false;
         }
@@ -102,7 +98,7 @@ public class TokenProvider {
     public Long getTokenIdFromRefreshToken(final String refreshToken) {
         try {
             Claims claims = Jwts.parserBuilder().
-                    setSigningKey(Keys.hmacShaKeyFor(jwtProperties.getBytesSecretKey())).
+                    setSigningKey(Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes())).
                     build().
                     parseClaimsJws(removeTokenPrefix(refreshToken)).
                     getBody();

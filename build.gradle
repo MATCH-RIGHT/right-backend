@@ -75,18 +75,11 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 	testImplementation 'io.findify:s3mock_2.13:0.2.6'
 
-	// AWS rekognition
-	implementation platform('software.amazon.awssdk:bom:2.25.0')
-	implementation 'software.amazon.awssdk:rekognition'
-
 	// Logback
 	implementation 'ch.qos.logback.contrib:logback-json-classic:0.1.5'
 	implementation 'ch.qos.logback.contrib:logback-jackson:0.1.5'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
 	implementation 'net.logstash.logback:logstash-logback-encoder:7.3'
-
-	// Firebase
-	implementation 'com.google.firebase:firebase-admin:9.2.0'
 }
 
 tasks.named('test') {
@@ -101,20 +94,17 @@ test {
 asciidoctor {
 	inputs.dir snippetsDir
 	dependsOn test
-
-	attributes 'snippets': snippetsDir
-
-	sourceDir = file('src/docs/asciidoc')
-	outputDir = file('build/docs/asciidoc')
 }
 
-tasks.register('copyDocument', Copy) {
-	dependsOn asciidoctor
-
-	from file("build/docs/asciidoc/")
-	into file("src/main/resources/static/docs")
+openapi3 {
+	servers = [{ url = 'http://localhost:8080' }]
+	title = 'RIGHT API'
+	description = 'API description'
+	version = '1.0.0'
+	format = 'json'
 }
 
-build {
-	dependsOn copyDocument
+tasks.register('copyOpenApiSpec', Copy) {
+	from "${buildDir}/api-spec/openapi3.json"
+	into "${projectDir}/src/main/resources/static/docs"
 }

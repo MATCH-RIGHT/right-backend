@@ -28,19 +28,13 @@ public class SmsService {
     }
 
     public String verifySms(SmsConfirmRequest smsRequest) {
-        if(!isVerify(smsRequest)) {
+        if(isVerify(smsRequest)) {
             throw new RestApiException(SmsError.INVALID_CERTIFICATION_CODE);
         }
-        smsRepository.removeSmsCertification(smsRequest.phoneNumber());
         return SmsResponse.EQUAL_VERIFICATION_CODE_SUCCESS.getMessage();
     }
 
     private boolean isVerify(SmsConfirmRequest smsRequest) {
-        if(!smsRepository.hasKey(smsRequest.phoneNumber())) {
-            return false;
-        }
-        
-        String storedCertificationNumber = smsRepository.getSmsCertification(smsRequest.phoneNumber());
-        return storedCertificationNumber != null && storedCertificationNumber.equals(smsRequest.certificationNumber());
+        return !(smsRepository.hasKey(smsRequest.phoneNumber())) && smsRepository.getSmsCertification(smsRequest.phoneNumber()).equals(smsRequest.certificationNumber());
     }
 }
