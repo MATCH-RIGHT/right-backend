@@ -8,7 +8,8 @@ public enum MemberResponse {
     WITHDRAW_SUCCESS("회원이 탈퇴되었습니다"),
     PASSWORD_CHANGE_SUCCESS("비밀번호 변경이 완료되었습니다"),
     IMAGE_CHANGE_SUCCESS("프로필 이미지 변경이 완료되었습니다"),
-    USERINFO_CHANGE_SUCCESS("회원정보 변경이 완료되었습니다");
+    USERINFO_CHANGE_SUCCESS("회원정보 변경이 완료되었습니다"),
+    PROFILE_UPDATE_SUCCESS("회원 정보 수정이 완료되었습니다");
 
     private final String message;
 

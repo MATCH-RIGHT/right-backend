@@ -12,15 +12,17 @@ import java.util.List;
 public class Interest {
 
     @Id
-    @Column(name = "interest_name")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "interestName", unique = true)
     private String name;
+    
+    @Column(name = "icon")
+    private String icon;
 
     @OneToMany(mappedBy = "interest", cascade = CascadeType.ALL)
     private List<MemberProfileToInterest> memberProfileToInterests = new ArrayList<>();
-
-    public Interest(String name) {
-        this.name = name;
-    }
 
     protected Interest() {
     }
@@ -28,6 +30,13 @@ public class Interest {
     public static Interest of(String name) {
         Interest interest = new Interest();
         interest.name = name;
+        return interest;
+    }
+    
+    public static Interest of(String name, String icon) {
+        Interest interest = new Interest();
+        interest.name = name;
+        interest.icon = icon;
         return interest;
     }
 }

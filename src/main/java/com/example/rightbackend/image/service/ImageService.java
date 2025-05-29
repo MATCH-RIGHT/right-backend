@@ -10,9 +10,13 @@ import com.example.rightbackend.image.controller.dto.S3File;
 import com.example.rightbackend.image.controller.dto.response.ImageListResponse;
 import com.example.rightbackend.image.domain.MemberImage;
 import com.example.rightbackend.image.domain.repository.MemberImageRepository;
-import jakarta.transaction.Transactional;
+import com.example.rightbackend.rekognition.controller.dto.response.FaceFeatureListResponse;
+import com.example.rightbackend.rekognition.domain.FaceFeature;
+import com.example.rightbackend.rekognition.domain.repository.FaceFeatureRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.services.rekognition.RekognitionClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,29 +27,51 @@ public class ImageService {
     private final MemberRepository memberRepository;
     private final S3Uploader s3Uploader;
     private final MemberImageRepository memberImageRepository;
+    private final FaceFeatureRepository faceFeatureRepository;
 
-    public ImageService(MemberRepository memberRepository, S3Uploader s3Uploader, MemberImageRepository memberImageRepository) {
+
+    public ImageService(MemberRepository memberRepository, S3Uploader s3Uploader, MemberImageRepository memberImageRepository, RekognitionClient rekognitionClient, FaceFeatureRepository faceFeatureRepository) {
         this.memberRepository = memberRepository;
         this.s3Uploader = s3Uploader;
         this.memberImageRepository = memberImageRepository;
+        this.faceFeatureRepository = faceFeatureRepository;
     }
 
     @Transactional
     public void multiUpload(final LoginMember loginMember, final List<MultipartFile> images) {
         Member member = getMember(loginMember);
 
-        List<MemberImage> memberImageEntities = uploadS3(images, member);
-        member.setMemberImage(memberImageEntities);
+        List<MemberImage> newMemberImageEntities = uploadS3(images, member);
+        
+        List<MemberImage> existingImages = member.getMemberImage();
+        if (existingImages == null) {
+            existingImages = new ArrayList<>();
+        }
+        
+        existingImages.addAll(newMemberImageEntities);
+        member.setMemberImage(existingImages);
+        
         memberRepository.save(member);
     }
 
     private List<MemberImage> uploadS3(List<MultipartFile> images, Member member) {
         List<MemberImage> memberImagesEntities = new ArrayList<>();
         List<S3File> s3Files = s3Uploader.multiUpload(images);
+        
+        int lastIndex = 0;
+        List<MemberImage> existingImages = member.getMemberImage();
+        if (!existingImages.isEmpty()) {
+            lastIndex = existingImages.stream()
+                    .mapToInt(MemberImage::getImageIndex)
+                    .max()
+                    .orElse(0);
+        }
 
+        int index = lastIndex;
         for(S3File image: s3Files) {
             MemberImage memberImage = MemberImage.from(image);
             memberImage.setMember(member);
+            memberImage.setImageIndex(++index);
             memberImagesEntities.add(memberImage);
         }
         return memberImagesEntities;
@@ -59,17 +85,23 @@ public class ImageService {
                 .map(image -> new ImageListResponse(
                         image.getId(),
                         image.getName(),
-                        image.getUrl()))
+                        image.getUrl(),
+                        image.getImageIndex()))
                 .collect(Collectors.toList());
     }
 
     @Transactional
     public void deleteImage(final LoginMember loginMember, final String fileName) {
-        Member member = getMember(loginMember);
         MemberImage image = memberImageRepository.findByName(fileName)
                 .orElseThrow(() -> new RestApiException(ImageError.IMAGE_NOT_FOUND));
         s3Uploader.delete(image.getName());
         memberImageRepository.delete(image);
+    }
+
+    @Transactional(readOnly = true)
+    public FaceFeatureListResponse getAllFaceFeatures() {
+        List<FaceFeature> faceFeatures = faceFeatureRepository.findAllByOrderByIdAsc();
+        return new FaceFeatureListResponse(faceFeatures);
     }
 
     private Member getMember(LoginMember loginMember) {

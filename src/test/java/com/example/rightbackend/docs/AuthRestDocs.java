@@ -27,7 +27,7 @@ public class AuthRestDocs extends BaseRestDocsTest {
 
         doReturn(response).when(authController).login(request);
 
-        this.mockMvc.perform(post("/auth/login")
+        this.mockMvc.perform(post("/api/auth/login")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -53,7 +53,7 @@ public class AuthRestDocs extends BaseRestDocsTest {
 
         doReturn(response).when(authController).logout(any());
 
-        this.mockMvc.perform(post("/auth/logout")
+        this.mockMvc.perform(post("/api/auth/logout")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -74,7 +74,7 @@ public class AuthRestDocs extends BaseRestDocsTest {
 
         doReturn(response).when(authController).reissue(any());
 
-        this.mockMvc.perform(post("/auth/reissue")
+        this.mockMvc.perform(post("/api/auth/reissue")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -99,7 +99,7 @@ public class AuthRestDocs extends BaseRestDocsTest {
 
         doReturn(response).when(authController).withDraw(any());
 
-        this.mockMvc.perform(patch("/auth/withdraw")
+        this.mockMvc.perform(patch("/api/auth/withdraw")
                 .header("Authorization",  GIVEN_ACCESS_TOKEN))
                 .andExpect(status().isOk())
                 .andDo(document("auth-withdraw",

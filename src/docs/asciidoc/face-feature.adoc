@@ -1,0 +1,57 @@
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-face-feature]]
+== Face Feature
+
+[[resources-face-feature-upload]]
+=== 얼굴 특징 업로드
+
+==== HTTP request
+
+==== request-header 설명
+include::{snippets}/feature-upload/request-headers.adoc[]
+
+==== request-part 설명
+include::{snippets}/feature-upload/request-parts.adoc[]
+
+==== HTTP response
+
+include::{snippets}/feature-upload/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/feature-upload/response-fields.adoc[]
+
+
+[[resources-face-feature-get]]
+=== 얼굴 특징 조회
+
+==== HTTP request
+
+include::{snippets}/feature-get/http-request.adoc[]
+
+==== request-header 설명
+include::{snippets}/feature-get/request-headers.adoc[]
+
+==== HTTP response
+
+include::{snippets}/feature-get/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/feature-get/response-fields.adoc[]
+
+
+[[resources-face-features-get-all]]
+=== 모든 얼굴 특징 조회
+
+==== HTTP request
+
+include::{snippets}/face-features-get-all/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/face-features-get-all/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/face-features-get-all/response-fields.adoc[]
