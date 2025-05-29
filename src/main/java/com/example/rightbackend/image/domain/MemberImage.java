@@ -20,11 +20,8 @@ public class MemberImage {
     @Column
     String url;
 
-    @Column
-    private Integer imageIndex;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "memberId")
+    @JoinColumn(name = "member_Id")
     private Member member;
 
     protected MemberImage() {
@@ -34,13 +31,6 @@ public class MemberImage {
         MemberImage memberImage = new MemberImage();
         memberImage.name = imageFile.fileName();
         memberImage.url = imageFile.fileUrl();
-        return memberImage;
-    }
-
-    public static MemberImage of(String fileName, String fileUrl) {
-        MemberImage memberImage = new MemberImage();
-        memberImage.name = fileName;
-        memberImage.url = fileUrl;
         return memberImage;
     }
 }

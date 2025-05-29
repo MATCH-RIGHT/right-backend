@@ -9,9 +9,9 @@ public enum MemberSuccess implements SuccessCode {
     MEMBER_PAGE_CHANGE_SUCCESS(HttpStatus.OK, "M004", "회원 페이지 변경이 완료했습니다"),
     SEARCH_ID_SUCCESS(HttpStatus.OK, "M005", "아이디 조회를 완료했습니다"),
     CHANGE_PASSWORD_SUCCESS(HttpStatus.OK, "M006", "비밀번호 완료했습니다"),
-    GET_INTERESTS_SUCCESS(HttpStatus.OK, "M007", "관심사 목록 조회를 완료했습니다"),
-    GET_LOCATIONS_SUCCESS(HttpStatus.OK, "M008", "지역 목록 조회를 완료했습니다"),
-    UPDATE_PROFILE_SUCCESS(HttpStatus.OK, "M009", "회원 정보 수정을 완료했습니다"),
+    IMAGE_UPLOAD_SUCCESS(HttpStatus.OK, "M007", "이미지 업로드를 완료했습니다"),
+    IMAGE_DELETE_SUCCESS(HttpStatus.OK, "M008", "이미지 삭제를 완료했습니다"),
+    IMAGE_CHANGE_SUCCESS(HttpStatus.OK, "M009", "이미지 변경을 완료했습니다"),
     ;
 
     private final HttpStatus httpStatus;

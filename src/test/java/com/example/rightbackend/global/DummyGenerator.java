@@ -8,11 +8,9 @@ import com.example.rightbackend.auth.service.TokenProvider;
 import com.example.rightbackend.member.controller.dto.EncodeMember;
 import com.example.rightbackend.member.controller.dto.EncodeMemberProfile;
 import com.example.rightbackend.member.domain.Interest;
-import com.example.rightbackend.member.domain.Location;
 import com.example.rightbackend.member.domain.MemberProfile;
 import com.example.rightbackend.member.domain.MemberProfileToInterest;
 import com.example.rightbackend.member.domain.repository.InterestRepository;
-import com.example.rightbackend.member.domain.repository.LocationRepository;
 import com.example.rightbackend.member.domain.repository.MemberProfileRepository;
 import com.example.rightbackend.member.service.TextEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +23,6 @@ public class DummyGenerator {
     @Autowired MemberRepository memberRepository;
     @Autowired MemberProfileRepository memberProfileRepository;
     @Autowired InterestRepository interestRepository;
-    @Autowired LocationRepository locationRepository;
     @Autowired TextEncoder textEncoder;
 
     public static final String GIVEN_NAME = "tmpName";
@@ -36,7 +33,7 @@ public class DummyGenerator {
     public static final String GIVEN_NICKNAME = "tmpNicknmae";
     public static final String GIVEN_GENDER = "0";
     public static final String GIVEN_BIRTHDAY = "1999-01-01";
-    public static final String GIVEN_LOCATION_NAME = "부산광역시 남구";
+    public static final String GIVEN_ADDRESS = "busan";
     public static final String GIVEN_HEIGHT = "180";
     public static final String GIVEN_BODY_TYPE = "slim";
     public static final String GIVEN_JOB = "student";
@@ -50,19 +47,13 @@ public class DummyGenerator {
     private TokenRepository tokenRepository;
 
     public Member generateSingleMember() {
-        String uniqueSuffix = String.valueOf(System.currentTimeMillis());
-        Member member = makeMember(uniqueSuffix);
+        Member member = makeMember();
         saveMemberProfile(member);
         return member;
     }
 
-    private Member makeMember(String uniqueSuffix) {
-        EncodeMember signUp = new EncodeMember(
-                GIVEN_NAME + uniqueSuffix, 
-                GIVEN_PROVIDER, 
-                GIVEN_PROVIDER_ID + uniqueSuffix, 
-                GIVEN_PASSWORD,
-                GIVEN_PHONE_NUMBER + uniqueSuffix);
+    private Member makeMember() {
+        EncodeMember signUp = new EncodeMember(GIVEN_NAME, GIVEN_PROVIDER, GIVEN_PROVIDER_ID, GIVEN_PASSWORD,GIVEN_PHONE_NUMBER);
         return memberRepository.save(Member.of(signUp));
     }
 
@@ -71,21 +62,17 @@ public class DummyGenerator {
                 TextEncoder.encrypt(GIVEN_NICKNAME),
                 TextEncoder.encrypt(GIVEN_GENDER),
                 TextEncoder.encrypt(GIVEN_BIRTHDAY),
+                TextEncoder.encrypt(GIVEN_ADDRESS),
                 TextEncoder.encrypt(GIVEN_HEIGHT),
                 TextEncoder.encrypt(GIVEN_BODY_TYPE),
                 TextEncoder.encrypt(GIVEN_JOB),
                 GIVEN_INTERESTS,
-                TextEncoder.encrypt(GIVEN_MYSELF),
-                TextEncoder.encrypt(GIVEN_MONEY));
+                TextEncoder.encrypt(GIVEN_MONEY),
+                TextEncoder.encrypt(GIVEN_MYSELF));
 
         MemberProfile memberProfile = MemberProfile.of(encodeMemberProfile, member);
 
         addInterestsToMemberProfile(memberProfile, GIVEN_INTERESTS);
-
-        // 지역 추가
-        Location location = locationRepository.findByName(GIVEN_LOCATION_NAME)
-                .orElseGet(() -> locationRepository.save(Location.of(GIVEN_LOCATION_NAME)));
-        memberProfile.addLocation(location);
 
         memberProfileRepository.save(memberProfile);
         member.setMemberProfile(memberProfile);
@@ -98,6 +85,7 @@ public class DummyGenerator {
         }
         for(String interestName: interests) {
             Interest interest = interestRepository.findByName(interestName).orElseGet(() -> interestRepository.save(Interest.of(interestName)));
+            MemberProfileToInterest link = MemberProfileToInterest.of(memberProfile, interest);
             memberProfile.addInterest(interest);
         }
     }

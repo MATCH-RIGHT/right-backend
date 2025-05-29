@@ -6,8 +6,7 @@ public enum ImageError implements ErrorCode {
     IMAGE_FORMAT_ERROR(HttpStatus.BAD_REQUEST, "I1", "올바르지 않은 이미지 저장입니다"),
     LIMIT_IMAGE_SIZE_ERROR(HttpStatus.BAD_REQUEST, "I2", "초과한 용량의 이미지 저장입니다"),
     IMAGE_IO_ERROR(HttpStatus.BAD_REQUEST, "I3", "존재하지 않거나 접근할 수 없는 이미지입니다"),
-    IMAGE_NOT_FOUND(HttpStatus.BAD_REQUEST, "I4", "존재하지 않는 이미지입니다"),
-    IMAGE_NOT_DETECTION(HttpStatus.BAD_REQUEST, "I5", "얼굴 감지 중 오류가 발생했습니다")
+    IMAGE_NOT_FOUND(HttpStatus.BAD_REQUEST, "I4", "존재하지 않는 이미지입니다")
     ;
 
     private final HttpStatus httpStatus;

@@ -11,21 +11,21 @@ import com.example.rightbackend.global.response.error.MemberError;
 import com.example.rightbackend.global.response.error.TokenError;
 import com.example.rightbackend.member.controller.dto.EncodeMember;
 import com.example.rightbackend.member.controller.dto.EncodeMemberProfile;
-import com.example.rightbackend.member.controller.dto.request.*;
+import com.example.rightbackend.member.controller.dto.request.CheckIdRequest;
+import com.example.rightbackend.member.controller.dto.request.ResetPasswordRequest;
+import com.example.rightbackend.member.controller.dto.request.SearchIdRequest;
+import com.example.rightbackend.member.controller.dto.request.SignUpRequest;
 import com.example.rightbackend.member.controller.dto.response.MemberPageResponse;
 import com.example.rightbackend.member.controller.dto.response.MemberResponse;
 import com.example.rightbackend.member.domain.Interest;
-import com.example.rightbackend.member.domain.Location;
 import com.example.rightbackend.member.domain.MemberProfile;
 import com.example.rightbackend.member.domain.MemberProfileToInterest;
 import com.example.rightbackend.member.domain.repository.InterestRepository;
-import com.example.rightbackend.member.domain.repository.LocationRepository;
 import com.example.rightbackend.member.domain.repository.MemberProfileRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class MemberProfileService {
@@ -35,17 +35,13 @@ public class MemberProfileService {
     private final MemberRepository memberRepository;
     private final MemberProfileRepository memberProfileRepository;
     private final InterestRepository interestRepository;
-    private final LocationRepository locationRepository;
 
-    public MemberProfileService(PasswordEncoder passwordEncoder, TokenRepository tokenRepository, MemberRepository memberRepository, 
-                             final MemberProfileRepository memberProfileRepository, InterestRepository interestRepository,
-                             LocationRepository locationRepository) {
+    public MemberProfileService(PasswordEncoder passwordEncoder, TokenRepository tokenRepository, MemberRepository memberRepository, final MemberProfileRepository memberProfileRepository, InterestRepository interestRepository) {
         this.passwordEncoder = passwordEncoder;
         this.tokenRepository = tokenRepository;
         this.memberRepository = memberRepository;
         this.memberProfileRepository = memberProfileRepository;
         this.interestRepository = interestRepository;
-        this.locationRepository = locationRepository;
     }
 
     @Transactional
@@ -56,12 +52,6 @@ public class MemberProfileService {
         MemberProfile memberProfile = getMemberProfileEntity(request, member);
 
         addInterestsToMemberProfile(memberProfile, request.interests());
-        
-        if (request.locationName() != null && !request.locationName().isEmpty()) {
-            Location location = locationRepository.findByName(request.locationName())
-                .orElseGet(() -> locationRepository.save(Location.of(request.locationName())));
-            memberProfile.addLocation(location);
-        }
 
         memberProfile = memberProfileRepository.save(memberProfile);
 
@@ -103,6 +93,7 @@ public class MemberProfileService {
         return new EncodeMemberProfile(TextEncoder.encrypt(request.nickname()),
                 TextEncoder.encrypt(request.gender()),
                 TextEncoder.encrypt(request.birthday()),
+                TextEncoder.encrypt(request.address()),
                 TextEncoder.encrypt(request.height()),
                 TextEncoder.encrypt(request.body_type()),
                 TextEncoder.encrypt(request.job()),
@@ -148,45 +139,5 @@ public class MemberProfileService {
     private Token getToken(final Member member) {
         return tokenRepository.findByMember(member).orElseThrow(()
                 -> new RestApiException(TokenError.NULL_REFRESH_TOKEN));
-    }
-
-    @Transactional(readOnly = true)
-    public List<Interest> getAllInterests() {
-        return interestRepository.findAll();
-    }
-    
-    @Transactional(readOnly = true)
-    public List<Location> getAllLocations() {
-        return locationRepository.findAll();
-    }
-    
-    @Transactional
-    public String updateProfile(final LoginMember loginMember, final UpdateProfileRequest request) {
-        Member member = getMember(loginMember);
-        MemberProfile memberProfile = member.getMemberProfile();
-        
-        if (request.nickname() != null) memberProfile.setNickname(TextEncoder.encrypt(request.nickname()));
-        if (request.gender() != null) memberProfile.setGender(TextEncoder.encrypt(request.gender()));
-        if (request.birthday() != null) memberProfile.setBirthday(TextEncoder.encrypt(request.birthday()));
-        if (request.height() != null) memberProfile.setHeight(TextEncoder.encrypt(request.height()));
-        if (request.body_type() != null) memberProfile.setBody_type(TextEncoder.encrypt(request.body_type()));
-        if (request.job() != null) memberProfile.setJob(TextEncoder.encrypt(request.job()));
-        if (request.myself() != null) memberProfile.setMyself(request.myself());
-        
-        if (request.interests() != null) {
-            memberProfile.getMemberProfileToInterests().clear();
-            addInterestsToMemberProfile(memberProfile, request.interests());
-        }
-        
-        if (request.locationName() != null) {
-            memberProfile.getMemberProfileToLocations().clear();
-            Location location = locationRepository.findByName(request.locationName())
-                .orElseGet(() -> locationRepository.save(Location.of(request.locationName())));
-            memberProfile.addLocation(location);
-        }
-        
-        memberProfileRepository.save(memberProfile);
-        
-        return MemberResponse.PROFILE_UPDATE_SUCCESS.getMessage();
     }
 }
