@@ -1,0 +1,86 @@
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-image]]
+== Image
+
+[[resources-image-upload]]
+=== 이미지 업로드
+
+==== HTTP request
+
+include::{snippets}/image-upload/http-request.adoc[]
+
+==== request-header 설명
+include::{snippets}/image-upload/request-headers.adoc[]
+
+==== request-parts 설명
+include::{snippets}/image-upload/request-parts.adoc[]
+
+==== HTTP response
+
+include::{snippets}/image-upload/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/image-upload/response-fields.adoc[]
+
+
+[[resources-image-get-all]]
+=== 이미지 목록 조회
+
+==== HTTP request
+
+include::{snippets}/image-get-all/http-request.adoc[]
+
+==== request-header 설명
+include::{snippets}/image-get-all/request-headers.adoc[]
+
+==== HTTP response
+
+include::{snippets}/image-get-all/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/image-get-all/response-fields.adoc[]
+
+
+[[resources-image-update]]
+=== 이미지 업데이트
+
+==== HTTP request
+
+include::{snippets}/image-update/http-request.adoc[]
+
+==== request-header 설명
+include::{snippets}/image-update/request-headers.adoc[]
+
+==== path-parameters 설명
+include::{snippets}/image-update/path-parameters.adoc[]
+
+==== HTTP response
+
+include::{snippets}/image-update/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/image-update/response-fields.adoc[]
+
+
+[[resources-image-delete]]
+=== 이미지 삭제
+
+==== HTTP request
+
+include::{snippets}/image-delete/http-request.adoc[]
+
+==== request-header 설명
+include::{snippets}/image-delete/request-headers.adoc[]
+
+==== path-parameters 설명
+include::{snippets}/image-delete/path-parameters.adoc[]
+
+==== HTTP response
+
+include::{snippets}/image-delete/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/image-delete/response-fields.adoc[]

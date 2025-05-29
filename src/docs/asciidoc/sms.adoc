@@ -1,0 +1,41 @@
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-sms]]
+== SMS
+
+[[resources-sms-send]]
+=== SMS 발송
+
+==== HTTP request
+
+include::{snippets}/sms-send/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/sms-send/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/sms-send/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/sms-send/response-fields.adoc[]
+
+
+[[resources-sms-confirm]]
+=== SMS 인증 확인
+
+==== HTTP request
+
+include::{snippets}/sms-confirm/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/sms-confirm/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/sms-confirm/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/sms-confirm/response-fields.adoc[]
