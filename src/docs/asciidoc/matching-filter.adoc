@@ -1,0 +1,44 @@
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-matching]]
+== Matching-fliter
+
+[[resources-matching-filter-create-update]]
+=== 매칭 필터 생성/업데이트
+
+==== HTTP request
+
+include::{snippets}/matching-filter-create-update/http-request.adoc[]
+
+==== request-header 설명
+include::{snippets}/matching-filter-create-update/request-headers.adoc[]
+
+==== request-body 설명
+include::{snippets}/matching-filter-create-update/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/matching-filter-create-update/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/matching-filter-create-update/response-fields.adoc[]
+
+
+[[resources-matching-filter-get]]
+=== 매칭 필터 조회
+
+==== HTTP request
+
+include::{snippets}/matching-filter-get/http-request.adoc[]
+
+==== request-header 설명
+include::{snippets}/matching-filter-get/request-headers.adoc[]
+
+==== HTTP response
+
+include::{snippets}/matching-filter-get/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/matching-filter-get/response-fields.adoc[]

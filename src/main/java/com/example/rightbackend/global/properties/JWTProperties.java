@@ -5,6 +5,8 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+
 @Component @Getter @Setter
 public class JWTProperties {
     @Value("${jwt.secretKey}")
@@ -15,4 +17,8 @@ public class JWTProperties {
 
     @Value("${jwt.refreshTokenValidTime}")
     private Long refreshTokenValidTime;
+
+    public byte[] getBytesSecretKey() {
+        return secretKey.getBytes(StandardCharsets.UTF_8);
+    }
 }
