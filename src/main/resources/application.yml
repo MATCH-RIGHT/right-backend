@@ -1,4 +1,4 @@
 spring:
   profiles:
-    active: dev
-    include: secret
+    active: secret
+#    include: secret
