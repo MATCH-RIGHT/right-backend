@@ -1,5 +1,6 @@
 package com.example.rightbackend.rekognition.service;
 
+import com.example.rightbackend.global.exception.RestApiException;
 import com.example.rightbackend.rekognition.domain.FaceFeature;
 import com.example.rightbackend.rekognition.domain.repository.FaceFeatureRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -129,7 +130,7 @@ class FaceFeatureBitmaskUtilTest {
         Long invalidFeatureId = 999L;
         
         // when & then
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(RestApiException.class, () -> {
             faceFeatureBitmaskUtil.getBitmaskIndex(invalidFeatureId);
         });
     }
