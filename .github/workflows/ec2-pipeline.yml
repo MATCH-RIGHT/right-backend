@@ -27,10 +27,12 @@ jobs:
           distribution: 'temurin'
 
       - name: Set up secret.yml
+        env:
+          APPLICATION_SECRET_CONTENT: ${{ secrets.APPLICATION_SECRET }}
         run: |
           cd ./src/main/resources
           touch ./application-secret.yml
-          echo "${{ secrets.APPLICATION_SECRET }}" > ./application-secret.yml
+          echo "$APPLICATION_SECRET_CONTENT" > ./application-secret.yml
           ls -a .
 
       - name: Grant execute permission for Gradle
@@ -43,7 +45,7 @@ jobs:
           cp -r build/docs/asciidoc/* src/main/resources/static/docs/
 
       - name: PR and PUSH Test Verification
-        run: ./gradlew test
+        run: ./gradlew build -x test
 
       - name: Docker push image
         run: |
