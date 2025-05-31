@@ -89,32 +89,31 @@ dependencies {
 	implementation 'com.google.firebase:firebase-admin:9.2.0'
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-}
-
 test {
-	useJUnitPlatform()
 	outputs.dir snippetsDir
+	useJUnitPlatform()
 }
 
 asciidoctor {
-	inputs.dir snippetsDir
 	dependsOn test
-
-	attributes 'snippets': snippetsDir
-
+	inputs.dir snippetsDir
 	sourceDir = file('src/docs/asciidoc')
-	outputDir = file('build/docs/asciidoc')
+	outputDir = file("$buildDir/docs/asciidoc")
 }
 
 tasks.register('copyDocument', Copy) {
 	dependsOn asciidoctor
-
-	from file("build/docs/asciidoc/")
-	into file("src/main/resources/static/docs")
+	from("$buildDir/docs/asciidoc")
+	into("$buildDir/generated-docs")
 }
 
-build {
-	dependsOn copyDocument
+bootJar {
+	dependsOn tasks.named('copyDocument')
+	from("$buildDir/generated-docs") {
+		into 'static/docs'
+	}
+}
+
+tasks.named('build') {
+	dependsOn tasks.named('bootJar')
 }

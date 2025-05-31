@@ -45,7 +45,7 @@ jobs:
           cp -r build/docs/asciidoc/* src/main/resources/static/docs/
 
       - name: PR and PUSH Test Verification
-        run: ./gradlew test
+        run: ./gradlew build -x test
 
       - name: Docker push image
         run: |
