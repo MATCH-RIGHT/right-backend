@@ -101,6 +101,8 @@ test {
 asciidoctor {
 	dependsOn test
 	inputs.dir snippetsDir
+	classpath = configurations.asciidoctorExt
+	attributes('snippets': snippetsDir)
 	sourceDir = file('src/docs/asciidoc')
 	outputDir = file("$buildDir/docs/asciidoc")
 }
