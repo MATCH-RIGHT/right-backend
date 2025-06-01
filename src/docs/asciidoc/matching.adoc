@@ -46,17 +46,17 @@ include::{snippets}/matching-premium-execute/response-fields.adoc[]
 
 ==== HTTP request
 
-include::{snippets}/matching-active-list/http-request.adoc[]
+include::{snippets}/matching-active-get/http-request.adoc[]
 
 ==== request-header 설명
-include::{snippets}/matching-active-list/request-headers.adoc[]
+include::{snippets}/matching-active-get/request-headers.adoc[]
 
 ==== HTTP response
 
-include::{snippets}/matching-active-list/http-response.adoc[]
+include::{snippets}/matching-active-get/http-response.adoc[]
 
 ==== response-body 설명
-include::{snippets}/matching-active-list/response-fields.adoc[]
+include::{snippets}/matching-active-get/response-fields.adoc[]
 
 
 [[resources-matching-matched]]
@@ -64,17 +64,17 @@ include::{snippets}/matching-active-list/response-fields.adoc[]
 
 ==== HTTP request
 
-include::{snippets}/matching-matched-list/http-request.adoc[]
+include::{snippets}/matching-matched-get/http-request.adoc[]
 
 ==== request-header 설명
-include::{snippets}/matching-matched-list/request-headers.adoc[]
+include::{snippets}/matching-matched-get/request-headers.adoc[]
 
 ==== HTTP response
 
-include::{snippets}/matching-matched-list/http-response.adoc[]
+include::{snippets}/matching-matched-get/http-response.adoc[]
 
 ==== response-body 설명
-include::{snippets}/matching-matched-list/response-fields.adoc[]
+include::{snippets}/matching-matched-get/response-fields.adoc[]
 
 
 [[resources-matching-like]]
