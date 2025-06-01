@@ -1,10 +1,4 @@
 spring:
-  config:
-    import: optional:aws-parameterstore:/right/
-aws:
-  region:
-    static: ap-northeast-2
-
   datasource:
     url: jdbc:mysql://localhost:3306/right?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -32,10 +26,3 @@ aws:
     redis:
       host: localhost
       port: 6379
-
-springdoc:
-  api-docs:
-    path: /api-docs
-  swagger-ui:
-    path: /swagger-ui.html
-    url: /docs/openapi3.json
