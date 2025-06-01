@@ -9,7 +9,7 @@ spring:
       static: ap-northeast-2
 
   datasource:
-    url: jdbc:mysql://right-mysql:3306/right?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://right-mysql:3306/right?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: 1024
