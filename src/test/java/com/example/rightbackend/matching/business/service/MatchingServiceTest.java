@@ -1,10 +1,14 @@
 package com.example.rightbackend.matching.business.service;
 
 import com.example.rightbackend.global.exception.RestApiException;
+import com.example.rightbackend.matching.business.domain.Matched;
 import com.example.rightbackend.matching.business.domain.MatchingResult;
+import com.example.rightbackend.matching.business.domain.repository.MatchedRepository;
 import com.example.rightbackend.matching.business.domain.repository.MatchingResultRepository;
 import com.example.rightbackend.matching.business.type.MatchingType;
 import com.example.rightbackend.member.domain.MemberProfile;
+import com.example.rightbackend.noti.service.FcmSender;
+import com.example.rightbackend.noti.service.NotificationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,6 +32,15 @@ class MatchingServiceTest {
 
     @Mock
     private MatchingResultRepository matchingResultRepository;
+
+    @Mock
+    private MatchedRepository matchedRepository;
+
+    @Mock
+    private NotificationService notificationService;
+
+    @Mock
+    private FcmSender fcmSender;
 
     @Mock
     private MatchingType freeMatchingType;
@@ -202,6 +215,8 @@ class MatchingServiceTest {
         
         when(matchingResultRepository.findById(matchingResultId)).thenReturn(Optional.of(freeMatchingResult));
         when(matchingResultRepository.save(any(MatchingResult.class))).thenReturn(freeMatchingResult);
+        doNothing().when(notificationService).saveLikeNotification(any(MatchingResult.class));
+        doNothing().when(fcmSender).sendLikeNotification(any(MatchingResult.class));
 
         // when
         matchingService.like(matchingResultId, sourceMemberProfile);
@@ -213,6 +228,8 @@ class MatchingServiceTest {
         
         verify(matchingResultRepository).findById(matchingResultId);
         verify(matchingResultRepository).save(freeMatchingResult);
+        verify(notificationService).saveLikeNotification(any(MatchingResult.class));
+        verify(fcmSender).sendLikeNotification(any(MatchingResult.class));
     }
     
     @Test
@@ -223,6 +240,8 @@ class MatchingServiceTest {
         
         when(matchingResultRepository.findById(matchingResultId)).thenReturn(Optional.of(freeMatchingResult));
         when(matchingResultRepository.save(any(MatchingResult.class))).thenReturn(freeMatchingResult);
+        doNothing().when(notificationService).saveLikeNotification(any(MatchingResult.class));
+        doNothing().when(fcmSender).sendLikeNotification(any(MatchingResult.class));
 
         // when
         matchingService.like(matchingResultId, targetMemberProfile);
@@ -234,6 +253,8 @@ class MatchingServiceTest {
         
         verify(matchingResultRepository).findById(matchingResultId);
         verify(matchingResultRepository).save(freeMatchingResult);
+        verify(notificationService).saveLikeNotification(any(MatchingResult.class));
+        verify(fcmSender).sendLikeNotification(any(MatchingResult.class));
     }
     
     @Test
@@ -245,6 +266,10 @@ class MatchingServiceTest {
         
         when(matchingResultRepository.findById(matchingResultId)).thenReturn(Optional.of(freeMatchingResult));
         when(matchingResultRepository.save(any(MatchingResult.class))).thenReturn(freeMatchingResult);
+        doNothing().when(notificationService).saveLikeNotification(any(MatchingResult.class));
+        doNothing().when(fcmSender).sendLikeNotification(any(MatchingResult.class));
+        doNothing().when(notificationService).saveMatchNotification(any(Matched.class));
+        doNothing().when(fcmSender).sendMatchNotification(any(Matched.class));
 
         // when
         matchingService.like(matchingResultId, targetMemberProfile);
@@ -256,6 +281,10 @@ class MatchingServiceTest {
         
         verify(matchingResultRepository).findById(matchingResultId);
         verify(matchingResultRepository).save(freeMatchingResult);
+        verify(notificationService).saveLikeNotification(any(MatchingResult.class));
+        verify(fcmSender).sendLikeNotification(any(MatchingResult.class));
+        verify(notificationService).saveMatchNotification(any(Matched.class));
+        verify(fcmSender).sendMatchNotification(any(Matched.class));
     }
     
     @Test
@@ -348,8 +377,8 @@ class MatchingServiceTest {
     }
     
     @Test
-    @DisplayName("만료된 매칭 결과 삭제")
-    void cleanupExpiredMatchings() {
+    @DisplayName("만료된 매칭 결과 삭제 - 좋아요하지 않은 경우")
+    void cleanupExpiredMatchings_NotLiked() {
         // given
         List<MatchingResult> expiredMatchings = List.of(freeMatchingResult);
         
@@ -365,6 +394,38 @@ class MatchingServiceTest {
         
         verify(matchingResultRepository).findByExpiresAtLessThanAndMatchedFalse(any(LocalDateTime.class));
         verify(matchingResultRepository).deleteAll(expiredMatchings);
+        // 좋아요하지 않은 경우이므로 matchedRepository.saveAll이나 notification은 호출되지 않음
+        verify(matchedRepository, never()).saveAll(any(List.class));
+        verify(notificationService, never()).saveMatchNotification(any(Matched.class));
+        verify(fcmSender, never()).sendMatchNotification(any(Matched.class));
+    }
+    
+    @Test
+    @DisplayName("만료된 매칭 결과 삭제 - 양쪽 모두 좋아요한 경우")
+    void cleanupExpiredMatchings_BothLiked() {
+        // given
+        freeMatchingResult.sourceLike();
+        freeMatchingResult.targetLike(); // 양쪽 다 좋아요 상태로 설정
+        List<MatchingResult> expiredMatchings = List.of(freeMatchingResult);
+        
+        when(matchingResultRepository.findByExpiresAtLessThanAndMatchedFalse(any(LocalDateTime.class)))
+                .thenReturn(expiredMatchings);
+        when(matchedRepository.saveAll(any(List.class))).thenReturn(new ArrayList<>());
+        doNothing().when(matchingResultRepository).deleteAll(expiredMatchings);
+        doNothing().when(notificationService).saveMatchNotification(any(Matched.class));
+        doNothing().when(fcmSender).sendMatchNotification(any(Matched.class));
+
+        // when
+        int deletedCount = matchingService.cleanupExpiredMatchings();
+
+        // then
+        assertThat(deletedCount).isEqualTo(1);
+        
+        verify(matchingResultRepository).findByExpiresAtLessThanAndMatchedFalse(any(LocalDateTime.class));
+        verify(matchingResultRepository).deleteAll(expiredMatchings);
+        verify(matchedRepository).saveAll(any(List.class));
+        verify(notificationService).saveMatchNotification(any(Matched.class));
+        verify(fcmSender).sendMatchNotification(any(Matched.class));
     }
     
     private MemberProfile createMemberProfileWithReflection(Long id) throws Exception {

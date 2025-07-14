@@ -2,6 +2,8 @@ package com.example.rightbackend.global.config.resolver;
 
 import com.example.rightbackend.auth.controller.dto.LoginMember;
 import com.example.rightbackend.auth.service.TokenProvider;
+import com.example.rightbackend.global.exception.RestApiException;
+import com.example.rightbackend.global.response.error.TokenError;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -26,6 +28,9 @@ public class TokenResolver implements HandlerMethodArgumentResolver {
     @Override
     public Object resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer, final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) throws Exception {
         String Token = webRequest.getHeader("Authorization");
+        if (Token == null || Token.trim().isEmpty()) {
+            throw new RestApiException(TokenError.MISSING_CREDENTIALS);
+        }
         return tokenProvider.getLoginFromToken(Token);
     }
 }

@@ -20,7 +20,7 @@ public class SmsRestDocs extends BaseRestDocsTest {
     @Test
     @DisplayName("API - SMS 인증코드 전송")
     void sendSms() throws Exception {
-        final SmsSendRequest request = new SmsSendRequest("01012345678");
+        final SmsSendRequest request = new SmsSendRequest("010-1234-5678");
         final String message = SmsSuccess.VERIFICATION_CODE_SEND_SUCCESS.getMessage();
         SuccessResponse<String> response = SuccessResponse.of(SmsSuccess.VERIFICATION_CODE_SEND_SUCCESS, message);
 
@@ -44,7 +44,7 @@ public class SmsRestDocs extends BaseRestDocsTest {
     @Test
     @DisplayName("API - SMS 인증코드 확인")
     void confirmSms() throws Exception {
-        final SmsConfirmRequest request = new SmsConfirmRequest("01012345678", "123456");
+        final SmsConfirmRequest request = new SmsConfirmRequest("010-1234-5678", "123456");
         final String message = SmsSuccess.EQUAL_VERIFICATION_CODE_SUCCESS.getMessage();
         SuccessResponse<String> response = SuccessResponse.of(SmsSuccess.EQUAL_VERIFICATION_CODE_SUCCESS, message);
 

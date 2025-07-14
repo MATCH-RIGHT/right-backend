@@ -5,6 +5,7 @@ import com.example.rightbackend.global.response.success.SmsSuccess;
 import com.example.rightbackend.sms.controller.dto.request.SmsConfirmRequest;
 import com.example.rightbackend.sms.controller.dto.request.SmsSendRequest;
 import com.example.rightbackend.sms.service.SmsService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,12 +23,12 @@ public class SmsController {
     }
 
     @PostMapping("/send")
-    public ResponseEntity<SuccessResponse<String>> sendSms(@RequestBody SmsSendRequest request) {
+    public ResponseEntity<SuccessResponse<String>> sendSms(@Valid @RequestBody SmsSendRequest request) {
         return SuccessResponse.of(SmsSuccess.VERIFICATION_CODE_SEND_SUCCESS, smsService.sendSms(request));
     }
 
     @PostMapping("/confirm")
-    public ResponseEntity<SuccessResponse<String>> SmsVerification(@RequestBody SmsConfirmRequest request) {
+    public ResponseEntity<SuccessResponse<String>> SmsVerification(@Valid @RequestBody SmsConfirmRequest request) {
         return SuccessResponse.of(SmsSuccess.EQUAL_VERIFICATION_CODE_SUCCESS, smsService.verifySms(request));
     }
 }

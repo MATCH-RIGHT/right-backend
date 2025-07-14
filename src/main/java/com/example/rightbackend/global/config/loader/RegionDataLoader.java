@@ -2,27 +2,32 @@ package com.example.rightbackend.global.config.loader;
 
 import com.example.rightbackend.matching.filter.domain.Region;
 import com.example.rightbackend.matching.filter.domain.repository.RegionRepository;
-import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
 
-
-
+/**
+ * 
+ */
 @Slf4j
-@Component
-@RequiredArgsConstructor
+@Configuration
 public class RegionDataLoader {
 
     private final RegionRepository regionRepository;
 
-    @PostConstruct
-    @Transactional
-    public void init() {
-        log.info("지역 데이터 초기화 시작");
-        loadRegionData();
-        log.info("지역 데이터 초기화 완료");
+    public RegionDataLoader(RegionRepository regionRepository) {
+        this.regionRepository = regionRepository;
+    }
+    
+    @Bean(name = "regionDataLoaderRunner")
+    public CommandLineRunner initRegionData() {
+        return args -> {
+            log.info("지역 데이터 초기화 시작");
+            loadRegionData();
+            log.info("지역 데이터 초기화 완료");
+        };
     }
 
     @Transactional

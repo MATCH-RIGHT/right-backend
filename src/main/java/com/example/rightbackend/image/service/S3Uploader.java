@@ -28,6 +28,7 @@ public class S3Uploader {
     private static final String GIF_FILE_EXTENSION = "gif";
     private static final String JPG_FILE_EXTENSION = "jpg";
     private static final long MAX_IMAGE_SIZE = 10 * 1024 * 1024;
+    private static final int MAX_IMAGE_COUNT = 5;
 
 
     public S3Uploader(final AmazonS3Client amazonS3Client, final S3Properties s3Properties) {
@@ -36,7 +37,8 @@ public class S3Uploader {
     }
 
     public List<S3File> multiUpload(List<MultipartFile> files) {
-        multiCheckFileSize(files);
+        validateFiles(files);
+        multiCheckFileCount(files);
         return files.stream().map(this::uploadS3).toList();
     }
     private S3File uploadS3(MultipartFile file) {
@@ -75,9 +77,23 @@ public class S3Uploader {
         }
     }
 
-    private void multiCheckFileSize(List<MultipartFile> files) {
-        if (files.size() > MAX_IMAGE_SIZE) {
-            throw new RestApiException(ImageError.LIMIT_IMAGE_SIZE_ERROR);
+    private void validateFiles(List<MultipartFile> files) {
+        if (files == null || files.isEmpty()) {
+            throw new RestApiException(ImageError.EMPTY_FILE_LIST);
+        }
+        for (MultipartFile file : files) {
+            if (file == null || file.isEmpty()) {
+                throw new RestApiException(ImageError.EMPTY_FILE);
+            }
+            if (file.getOriginalFilename() == null || file.getOriginalFilename().trim().isEmpty()) {
+                throw new RestApiException(ImageError.INVALID_FILE_NAME);
+            }
+        }
+    }
+
+    private void multiCheckFileCount(List<MultipartFile> files) {
+        if (files.size() > MAX_IMAGE_COUNT) {
+            throw new RestApiException(ImageError.LIMIT_IMAGE_COUNT_ERROR);
         }
     }
 

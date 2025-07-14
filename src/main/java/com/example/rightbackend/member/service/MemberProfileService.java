@@ -50,6 +50,7 @@ public class MemberProfileService {
 
     @Transactional
     public String signUp(final SignUpRequest request) {
+        validateSignUpRequest(request);
 
         Member member = saveMemberEntity(request);
 
@@ -112,8 +113,9 @@ public class MemberProfileService {
     }
 
     @Transactional(readOnly = true)
-    public String checkDuplicateId(final CheckIdRequest providerId) {
-        if(memberRepository.findByProviderId(String.valueOf(providerId)).isPresent()) {
+    public String checkDuplicateId(final CheckIdRequest request) {
+        validateProviderId(request.providerId());
+        if(memberRepository.findByProviderId(request.providerId()).isPresent()) {
             throw new RestApiException(MemberError.DUPLICATE_ID);
         }
         return MemberResponse.AVAILABLE_ID.getMessage();
@@ -134,6 +136,7 @@ public class MemberProfileService {
 
     @Transactional
     public String resetPassword(final ResetPasswordRequest resetPasswordRequest) {
+        validateResetPasswordRequest(resetPasswordRequest);
         Member member = memberRepository.findFirstByNameAndPhoneNumber(resetPasswordRequest.name(), resetPasswordRequest.phoneNumber()).orElseThrow(()
                 -> new RestApiException(MemberError.NULL_MEMBER));
         member.setPassword(passwordEncoder.encrypt(resetPasswordRequest.newPassword()));
@@ -188,5 +191,84 @@ public class MemberProfileService {
         memberProfileRepository.save(memberProfile);
         
         return MemberResponse.PROFILE_UPDATE_SUCCESS.getMessage();
+    }
+
+    private void validateSignUpRequest(final SignUpRequest request) {
+        validateName(request.name());
+        validateProviderId(request.providerId());
+        validatePassword(request.password());
+        validatePhoneNumber(request.phoneNumber());
+        validateNickname(request.nickname());
+        if (request.height() != null && !request.height().trim().isEmpty()) {
+            validateHeight(request.height());
+        }
+        if (request.birthday() != null && !request.birthday().trim().isEmpty()) {
+            validateBirthday(request.birthday());
+        }
+    }
+
+    private void validateResetPasswordRequest(final ResetPasswordRequest request) {
+        validateName(request.name());
+        validatePhoneNumber(request.phoneNumber());
+        validatePassword(request.newPassword());
+    }
+
+    private void validateName(final String name) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new RestApiException(MemberError.INVALID_NAME_FORMAT);
+        }
+    }
+
+    private void validateProviderId(final String providerId) {
+        if (providerId == null || providerId.trim().isEmpty()) {
+            throw new RestApiException(MemberError.INVALID_ID);
+        }
+        if (!providerId.matches("^[a-zA-Z0-9]{3,20}$")) {
+            throw new RestApiException(MemberError.INVALID_PROVIDER_ID_FORMAT);
+        }
+    }
+
+       private void validatePassword(final String password) {
+        if (password == null || password.trim().isEmpty()) {
+            throw new RestApiException(MemberError.EMPTY_PASSWORD);
+        }
+        if (!(password.length() >= 8 && password.length() <= 24) || 
+            !password.matches(".*[a-zA-Z].*") || 
+            !password.matches(".*[0-9].*") || 
+            !password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?].*")) {
+            throw new RestApiException(MemberError.WEAK_PASSWORD);
+        }
+    }
+
+    private void validatePhoneNumber(final String phoneNumber) {
+        if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
+            throw new RestApiException(MemberError.INVALID_PHONE_FORMAT);
+        }
+        if (!phoneNumber.matches("^010-?\\d{4}-?\\d{4}$")) {
+            throw new RestApiException(MemberError.INVALID_PHONE_FORMAT);
+        }
+    }
+
+    private void validateNickname(final String nickname) {
+        if (nickname == null || nickname.trim().isEmpty()) {
+            throw new RestApiException(MemberError.INVALID_NICKNAME_FORMAT);
+        }
+    }
+
+    private void validateHeight(final String height) {
+        try {
+            int heightValue = Integer.parseInt(height);
+            if (heightValue < 120 || heightValue > 200) {
+                throw new RestApiException(MemberError.INVALID_HEIGHT_FORMAT);
+            }
+        } catch (NumberFormatException e) {
+            throw new RestApiException(MemberError.INVALID_HEIGHT_FORMAT);
+        }
+    }
+
+    private void validateBirthday(final String birthday) {
+        if (!birthday.matches("^\\d{4}-\\d{2}-\\d{2}$")) {
+            throw new RestApiException(MemberError.INVALID_BIRTHDAY_FORMAT);
+        }
     }
 }

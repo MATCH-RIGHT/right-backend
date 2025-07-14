@@ -7,7 +7,6 @@ import com.example.rightbackend.rekognition.service.FaceFeatureBitmaskUtil;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +14,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Configuration
-@Component
 public class FaceFeatureDataLoader {
 
     private final FaceFeatureRepository faceFeatureRepository;
@@ -26,7 +24,7 @@ public class FaceFeatureDataLoader {
         this.bitmaskUtil = bitmaskUtil;
     }
 
-    @Bean
+    @Bean(name = "faceFeatureDataLoaderRunner")
     public CommandLineRunner initFaceFeatureData() {
         return args -> {
             loadFaceFeatureData();

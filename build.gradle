@@ -47,12 +47,13 @@ dependencies {
 
 	// Spring TEST
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.awaitility:awaitility'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
 	// Spring REST Docs
 	asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
-    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
 	// Swagger-ui
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
@@ -67,6 +68,12 @@ dependencies {
 
 	// Redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	// WebSocket
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+	//SMTP
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
 	// coolSMS
 	implementation 'net.nurigo:sdk:4.3.0'
@@ -91,6 +98,10 @@ dependencies {
 	//AWS Parameter Store
 	implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.1.0")
 	implementation 'io.awspring.cloud:spring-cloud-aws-starter-parameter-store'
+
+	// MongoDB
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo.spring30x:4.11.0'
 }
 
 test {
@@ -102,24 +113,17 @@ asciidoctor {
 	dependsOn test
 	inputs.dir snippetsDir
 	configurations 'asciidoctorExt'
-	attributes('snippets': snippetsDir)
+	attributes 'snippets': snippetsDir
 	sourceDir = file('src/docs/asciidoc')
 	outputDir = file("$buildDir/docs/asciidoc")
 }
 
-tasks.register('copyDocument', Copy) {
+tasks.register('copyDocumentToStatic', Copy) {
 	dependsOn asciidoctor
 	from("$buildDir/docs/asciidoc")
-	into("$buildDir/generated-docs")
+	into("src/main/resources/static/docs")
 }
 
 bootJar {
-	dependsOn tasks.named('copyDocument')
-	from("$buildDir/generated-docs") {
-		into 'static/docs'
-	}
-}
-
-tasks.named('build') {
-	dependsOn tasks.named('bootJar')
+	dependsOn tasks.named('copyDocumentToStatic')
 }

@@ -2,8 +2,48 @@
 :toclevels: 2
 :sectlinks:
 
-[[resources-matching]]
-== Matching-fliter
+[[resources-matching-filter]]
+== Matching Filter
+
+=== 응답 코드
+
+==== 성공 코드
+[cols="1,3"]
+|===
+| Code | Description
+
+| MATCHING_FILTER_CREATE_SUCCESS
+| 매칭 필터 생성 성공
+
+| MATCHING_FILTER_UPDATE_SUCCESS
+| 매칭 필터 업데이트 성공
+
+| MATCHING_FILTER_RETRIEVED
+| 매칭 필터 조회 성공
+
+| LOCATION_LIST_RETRIEVED
+| 지역 목록 조회 성공
+
+|===
+
+==== 오류 코드
+[cols="1,3"]
+|===
+| Code | Description
+
+| MATCHING_FILTER_CREATE_FAILED
+| 매칭 필터 생성 실패
+
+| MATCHING_FILTER_NOT_FOUND
+| 매칭 필터를 찾을 수 없음
+
+| INVALID_FILTER_REQUEST
+| 올바르지 않은 필터 요청
+
+| LOCATION_NOT_FOUND
+| 지역을 찾을 수 없음
+
+|===
 
 [[resources-matching-filter-create-update]]
 === 매칭 필터 생성/업데이트

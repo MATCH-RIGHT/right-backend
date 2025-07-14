@@ -60,35 +60,31 @@ public class MatchingResult {
         return result;
     }
 
-    /**
-     * 소스 사용자가 좋아요를 보냄
-     */
     public void sourceLike() {
         this.sourceLiked = true;
         checkMatch();
     }
 
-    /**
-     * 타겟 사용자가 좋아요를 보냄
-     */
     public void targetLike() {
         this.targetLiked = true;
         checkMatch();
     }
 
-    /**
-     * 매칭 여부 확인
-     */
     private void checkMatch() {
         if (sourceLiked && targetLiked) {
             this.matched = true;
         }
     }
 
-    /**
-     * 매칭이 만료되었는지
-     */
     public boolean isExpired() {
         return LocalDateTime.now().isAfter(expiresAt);
+    }
+    
+    public boolean isSourceLiked() {
+        return sourceLiked;
+    }
+    
+    public boolean isTargetLiked() {
+        return targetLiked;
     }
 }

@@ -3,6 +3,7 @@ package com.example.rightbackend.global.response.success;
 import org.springframework.http.HttpStatus;
 
 public enum AuthSuccess implements SuccessCode {
+    
     GENERATE_TOKEN_SUCCESS(HttpStatus.OK, "A001", "토큰 발급에 성공했습니다"),
     LOGOUT_SUCCESS(HttpStatus.OK, "A002", "로그아웃에 성공했습니다"),
     REISSUE_TOKEN_SUCCESS(HttpStatus.OK, "A003", "토큰 재발급에 성공했습니다"),
