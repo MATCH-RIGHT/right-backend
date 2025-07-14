@@ -31,9 +31,19 @@ public class AuthService {
 
     @Transactional
     public AuthToken login(LoginRequest loginRequest) {
+        validateLoginRequest(loginRequest);
         Member member = getMemberEntityFromId(loginRequest.id());
         passwordCheck(loginRequest.password(), member);
         return generateAuthToken(member);
+    }
+
+    private void validateLoginRequest(final LoginRequest loginRequest) {
+        if (loginRequest.id() == null || loginRequest.id().trim().isEmpty()) {
+            throw new RestApiException(MemberError.INVALID_ID);
+        }
+        if (loginRequest.password() == null || loginRequest.password().trim().isEmpty()) {
+            throw new RestApiException(MemberError.EMPTY_PASSWORD);
+        }
     }
 
     private Member getMemberEntityFromId(final String id) {
