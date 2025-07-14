@@ -5,7 +5,6 @@ import com.example.rightbackend.member.domain.repository.InterestRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +12,6 @@ import java.util.Optional;
 import java.util.HashMap;
 
 @Configuration
-@Component
 public class InterestDataLoader {
 
     private final InterestRepository interestRepository;
@@ -22,7 +20,7 @@ public class InterestDataLoader {
         this.interestRepository = interestRepository;
     }
 
-    @Bean
+    @Bean(name = "interestDataLoaderRunner")
     public CommandLineRunner initInterestData() {
         return args -> {
             loadInterestData();

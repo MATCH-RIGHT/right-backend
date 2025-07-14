@@ -5,14 +5,12 @@ import com.example.rightbackend.member.domain.repository.LocationRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 @Configuration
-@Component
 public class LocationDataLoader {
 
     private final LocationRepository locationRepository;
@@ -21,7 +19,7 @@ public class LocationDataLoader {
         this.locationRepository = locationRepository;
     }
 
-    @Bean
+    @Bean(name = "locationDataLoaderRunner")
     public CommandLineRunner initLocationData() {
         return args -> {
             loadLocationData();
