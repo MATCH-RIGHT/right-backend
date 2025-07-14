@@ -1,9 +1,147 @@
+= Right Backend API 문서
 :toc: left
-:toclevels: 2
+:toclevels: 3
 :sectlinks:
+:source-highlighter: highlightjs
+
+[[overview]]
+== 개요
+
+Right Backend의 REST API 문서입니다.
+
+[[http-verbs]]
+== HTTP 동사
+
+REST API는 가능한 표준 HTTP 동사를 사용합니다.
+
+|===
+| 동사 | 용도
+
+| `GET`
+| 리소스를 가져올 때 사용
+
+| `POST`
+| 새 리소스를 만들 때 사용
+
+| `PUT`
+| 기존 리소스를 수정할 때 사용
+
+| `PATCH`
+| 기존 리소스의 일부를 수정할 때 사용
+
+| `DELETE`
+| 기존 리소스를 삭제할 때 사용
+|===
+
+[[http-status-codes]]
+== HTTP 상태 코드
+
+REST API는 가능한 표준 HTTP 상태 코드를 사용합니다.
+
+|===
+| 상태 코드 | 용도
+
+| `200 OK`
+| 요청을 성공적으로 처리함
+
+| `201 Created`
+| 새 리소스를 성공적으로 생성함
+
+| `204 No Content`
+| 요청을 성공적으로 처리했지만 반환할 데이터가 없음
+
+| `400 Bad Request`
+| 잘못된 요청
+
+| `401 Unauthorized`
+| 인증되지 않은 요청
+
+| `403 Forbidden`
+| 권한이 없는 요청
+
+| `404 Not Found`
+| 존재하지 않는 리소스에 대한 요청
+
+| `409 Conflict`
+| 리소스의 현재 상태와 충돌하는 요청
+
+| `500 Internal Server Error`
+| 서버 내부 오류
+|===
 
 [[resources-post]]
 == Authentication
+
+=== 응답 코드
+
+==== 성공 코드
+[cols="1,1,1,3"]
+|===
+| Code | HTTP Status | API Code | Description
+
+| GENERATE_TOKEN_SUCCESS
+| 200 OK
+| A001
+| 토큰 발급에 성공했습니다
+
+| LOGOUT_SUCCESS
+| 200 OK
+| A002
+| 로그아웃에 성공했습니다
+
+| REISSUE_TOKEN_SUCCESS
+| 200 OK
+| A003
+| 토큰 재발급에 성공했습니다
+
+| WITH_DRAW_SUCCESS
+| 200 OK
+| A004
+| 회원 탈퇴가 완료되었습니다
+
+| GET_PASSWORD_SUCCESS
+| 200 OK
+| A005
+| 비밀번호 조회가 완료되었습니다
+
+|===
+
+==== 오류 코드
+[cols="1,1,1,3"]
+|===
+| Code | HTTP Status | API Code | Description
+
+| INVALID_TOKEN
+| 400 Bad Request
+| T1
+| 올바르지 않은 AccessToken 입니다
+
+| EXPIRED_ACCESS_TOKEN
+| 401 Unauthorized
+| T2
+| 만료 된 AccessToken 입니다
+
+| EXPIRED_REFRESH_TOKEN
+| 401 Unauthorized
+| T3
+| 만료 된 RefreshToken 입니다
+
+| NULL_REFRESH_TOKEN
+| 401 Unauthorized
+| T4
+| 존재하지 않은 RefreshToken 입니다
+
+| NOT_ACCESS_TOKEN_FOR_REISSUE
+| 400 Bad Request
+| T5
+| 재발급하기에는 유효기간이 남은 AccessToken 입니다
+
+| MISSING_CREDENTIALS
+| 400 Bad Request
+| T6
+| Authorization 헤더가 존재하지 않습니다
+
+|===
 
 [[resources-post-create]]
 === 로그인 시도
@@ -73,12 +211,149 @@ include::{snippets}/auth-withdraw/http-response.adoc[]
 ==== response-body 설명
 include::{snippets}/auth-withdraw/response-fields.adoc[]
 
-:toc: left
-:toclevels: 2
-:sectlinks:
-
 [[resources-member]]
 == Member
+
+=== 응답 코드
+
+==== 성공 코드
+[cols="1,1,1,3"]
+|===
+| Code | HTTP Status | API Code | Description
+
+| SIGN_UP_SUCCESS
+| 200 OK
+| M001
+| 회원가입이 완료되었습니다
+
+| CHECK_ID_SUCCESS
+| 200 OK
+| M002
+| 사용 할 수 있는 아이디입니다
+
+| GET_MEMBER_PAGE_SUCCESS
+| 200 OK
+| M003
+| 회원 페이지 조회를 완료했습니다
+
+| MEMBER_PAGE_CHANGE_SUCCESS
+| 200 OK
+| M004
+| 회원 페이지 변경이 완료했습니다
+
+| SEARCH_ID_SUCCESS
+| 200 OK
+| M005
+| 아이디 조회를 완료했습니다
+
+| CHANGE_PASSWORD_SUCCESS
+| 200 OK
+| M006
+| 비밀번호 완료했습니다
+
+| GET_INTERESTS_SUCCESS
+| 200 OK
+| M007
+| 관심사 목록 조회를 완료했습니다
+
+| GET_LOCATIONS_SUCCESS
+| 200 OK
+| M008
+| 지역 목록 조회를 완료했습니다
+
+| UPDATE_PROFILE_SUCCESS
+| 200 OK
+| M009
+| 회원 정보 수정을 완료했습니다
+
+|===
+
+==== 오류 코드
+[cols="1,1,1,3"]
+|===
+| Code | HTTP Status | API Code | Description
+
+| INVALID_PASSWORD
+| 400 Bad Request
+| M1
+| 비밀번호가 일치하지 않습니다
+
+| INVALID_ID
+| 400 Bad Request
+| M2
+| 아이디를 입력해주세요
+
+| NULL_MEMBER
+| 422 Unprocessable Entity
+| M3
+| 존재하지 않는 회원입니다
+
+| INCORRECT_PASSWORD
+| 503 Service Unavailable
+| M4
+| 비밀번호가 옳지 않음
+
+| WITHDRAW_MEMBER
+| 400 Bad Request
+| M5
+| 탈퇴한 회원에 접근
+
+| DUPLICATE_ID
+| 409 Conflict
+| M6
+| 이미 존재하는 회원
+
+| NULL_LOCATION
+| 409 Conflict
+| M7
+| 존재하지 않는 지역
+
+| INVALID_FEATURE_INDEX
+| 400 Bad Request
+| M8
+| 특징 인덱스는 0 이상이어야 합니다
+
+| EMPTY_PASSWORD
+| 400 Bad Request
+| M9
+| 비밀번호를 입력해주세요
+
+| INVALID_PHONE_FORMAT
+| 400 Bad Request
+| M10
+| 올바른 전화번호 형식을 입력해주세요
+
+| WEAK_PASSWORD
+| 400 Bad Request
+| M11
+| 비밀번호는 8자 이상 24자 이하, 영문/숫자/특수문자를 포함해야 합니다
+
+| INVALID_NAME_FORMAT
+| 400 Bad Request
+| M12
+| 이름을 입력해주세요
+
+| INVALID_NICKNAME_FORMAT
+| 400 Bad Request
+| M13
+| 닉네임을 입력해주세요
+
+| INVALID_PROVIDER_ID_FORMAT
+| 400 Bad Request
+| M14
+| 아이디는 3-20자의 영문/숫자만 입력 가능합니다
+
+| INVALID_HEIGHT_FORMAT
+| 400 Bad Request
+| M15
+| 신장은 120-200cm 범위로 입력해주세요
+
+| INVALID_BIRTHDAY_FORMAT
+| 400 Bad Request
+| M16
+| 생년월일을 올바른 형식(YYYY-MM-DD)으로 입력해주세요
+
+|===
 
 [[resources-member-signup]]
 === 회원가입
@@ -220,70 +495,59 @@ include::{snippets}/member-get-locations/http-response.adoc[]
 ==== response-body 설명
 include::{snippets}/member-get-locations/response-fields.adoc[]
 
-:toc: left
-:toclevels: 2
-:sectlinks:
-
-[[resources-face-feature]]
-== Face Feature
-
-[[resources-face-feature-upload]]
-=== 얼굴 특징 업로드
-
-==== HTTP request
-
-==== request-header 설명
-include::{snippets}/feature-upload/request-headers.adoc[]
-
-==== request-part 설명
-include::{snippets}/feature-upload/request-parts.adoc[]
-
-==== HTTP response
-
-include::{snippets}/feature-upload/http-response.adoc[]
-
-==== response-body 설명
-include::{snippets}/feature-upload/response-fields.adoc[]
-
-
-[[resources-face-feature-get]]
-=== 얼굴 특징 조회
-
-==== HTTP request
-
-include::{snippets}/feature-get/http-request.adoc[]
-
-==== request-header 설명
-include::{snippets}/feature-get/request-headers.adoc[]
-
-==== HTTP response
-
-include::{snippets}/feature-get/http-response.adoc[]
-
-==== response-body 설명
-include::{snippets}/feature-get/response-fields.adoc[]
-
-
-[[resources-face-features-get-all]]
-=== 모든 얼굴 특징 조회
-
-==== HTTP request
-
-include::{snippets}/face-features-get-all/http-request.adoc[]
-
-==== HTTP response
-
-include::{snippets}/face-features-get-all/http-response.adoc[]
-
-==== response-body 설명
-include::{snippets}/face-features-get-all/response-fields.adoc[]
-
-:toc: left
-:toclevels: 2
-:sectlinks:
-
 [[resources-sms]]
 == SMS
+
+=== 응답 코드
+
+==== 성공 코드
+[cols="1,1,1,3"]
+|===
+| Code | HTTP Status | API Code | Description
+
+| VERIFICATION_CODE_SEND_SUCCESS
+| 200 OK
+| S001
+| 본인 인증 문자 전송에 성공했습니다
+
+| EQUAL_VERIFICATION_CODE_SUCCESS
+| 200 OK
+| S002
+| 본인 인증 코드 검사에 성공했습니다
+
+|===
+
+==== 오류 코드
+[cols="1,1,1,3"]
+|===
+| Code | HTTP Status | API Code | Description
+
+| INVALID_CERTIFICATION_CODE
+| 400 Bad Request
+| S1
+| 올바르지 않은 인증번호입니다
+
+| SMS_SEND_FAILURE
+| 500 Internal Server Error
+| S2
+| SMS 전송에 실패했습니다
+
+| CERTIFICATION_CODE_EXPIRED
+| 400 Bad Request
+| S3
+| 인증번호가 만료되었습니다
+
+| REDIS_CONNECTION_ERROR
+| 500 Internal Server Error
+| S4
+| 인증번호 저장소 연결에 실패했습니다
+
+| INVALID_PHONE_NUMBER
+| 400 Bad Request
+| S5
+| 올바르지 않은 전화번호 형식입니다
+
+|===
 
 [[resources-sms-send]]
 === SMS 발송
@@ -320,12 +584,109 @@ include::{snippets}/sms-confirm/http-response.adoc[]
 ==== response-body 설명
 include::{snippets}/sms-confirm/response-fields.adoc[]
 
-:toc: left
-:toclevels: 2
-:sectlinks:
-
 [[resources-image]]
 == Image
+
+=== 응답 코드
+
+==== 성공 코드
+[cols="1,1,1,3"]
+|===
+| Code | HTTP Status | API Code | Description
+
+| IMAGE_UPLOAD_SUCCESS
+| 200 OK
+| I001
+| 이미지 업로드를 완료했습니다
+
+| IMAGE_DELETE_SUCCESS
+| 200 OK
+| I002
+| 이미지 삭제를 완료했습니다
+
+| IMAGE_CHANGE_SUCCESS
+| 200 OK
+| I003
+| 이미지 변경을 완료했습니다
+
+| IMAGE_GET_SUCCESS
+| 200 OK
+| I004
+| 이미지 목록 조회를 완료했습니다
+
+| ALL_FACE_FEATURES_GET_SUCCESS
+| 200 OK
+| I005
+| 얼굴 특징 목록 조회 성공
+
+| MY_FEATURE_UPLOAD_SUCCESS
+| 200 OK
+| I006
+| 얼굴 특징 업로드를 완료했습니다
+
+| MY_FEATURE_GET_SUCCESS
+| 200 OK
+| I007
+| 나의 얼굴 특징 조회를 완료했습니다
+
+|===
+
+==== 오류 코드
+[cols="1,1,1,3"]
+|===
+| Code | HTTP Status | API Code | Description
+
+| IMAGE_FORMAT_ERROR
+| 400 Bad Request
+| I001
+| 지원하지 않는 이미지 형식입니다. PNG, JPG, JPEG, GIF 파일만 업로드 가능합니다
+
+| LIMIT_IMAGE_SIZE_ERROR
+| 400 Bad Request
+| I002
+| 이미지 크기가 10MB를 초과했습니다
+
+| IMAGE_IO_ERROR
+| 500 Internal Server Error
+| I003
+| 이미지 업로드 중 오류가 발생했습니다
+
+| IMAGE_NOT_FOUND
+| 404 Not Found
+| I004
+| 요청한 이미지를 찾을 수 없습니다
+
+| IMAGE_NOT_DETECTION
+| 400 Bad Request
+| I005
+| 얼굴 감지 중 오류가 발생했습니다
+
+| EMPTY_FILE_LIST
+| 400 Bad Request
+| I006
+| 업로드할 이미지를 선택해주세요
+
+| EMPTY_FILE
+| 400 Bad Request
+| I007
+| 빈 파일은 업로드할 수 없습니다
+
+| INVALID_FILE_NAME
+| 400 Bad Request
+| I008
+| 올바르지 않은 파일명입니다
+
+| LIMIT_IMAGE_COUNT_ERROR
+| 400 Bad Request
+| I009
+| 한 번에 최대 5개의 이미지만 업로드 가능합니다
+
+| UNAUTHORIZED_IMAGE_ACCESS
+| 403 Forbidden
+| I010
+| 다른 사용자의 이미지에 접근할 수 없습니다
+
+|===
 
 [[resources-image-upload]]
 === 이미지 업로드
@@ -407,12 +768,161 @@ include::{snippets}/image-delete/http-response.adoc[]
 ==== response-body 설명
 include::{snippets}/image-delete/response-fields.adoc[]
 
-:toc: left
-:toclevels: 2
-:sectlinks:
+[[resources-face-feature]]
+== Face Feature
 
-[[resources-matching]]
-== Matching-fliter
+=== 응답 코드
+
+==== 성공 코드
+[cols="1,1,1,3"]
+|===
+| Code | HTTP Status | API Code | Description
+
+| ALL_FACE_FEATURES_GET_SUCCESS
+| 200 OK
+| I005
+| 얼굴 특징 목록 조회 성공
+
+| MY_FEATURE_UPLOAD_SUCCESS
+| 200 OK
+| I006
+| 얼굴 특징 업로드를 완료했습니다
+
+| MY_FEATURE_GET_SUCCESS
+| 200 OK
+| I007
+| 나의 얼굴 특징 조회를 완료했습니다
+
+|===
+
+==== 오류 코드
+[cols="1,1,1,3"]
+|===
+| Code | HTTP Status | API Code | Description
+
+| IMAGE_NOT_DETECTION
+| 400 Bad Request
+| I005
+| 얼굴 감지 중 오류가 발생했습니다
+
+| IMAGE_NOT_FOUND
+| 404 Not Found
+| I004
+| 요청한 이미지를 찾을 수 없습니다
+
+| IMAGE_IO_ERROR
+| 500 Internal Server Error
+| I003
+| 이미지 업로드 중 오류가 발생했습니다
+
+|===
+
+[[resources-face-feature-upload]]
+=== 얼굴 특징 업로드
+
+==== HTTP request
+
+include::{snippets}/feature-upload/http-request.adoc[]
+
+==== request-header 설명
+include::{snippets}/feature-upload/request-headers.adoc[]
+
+==== request-part 설명
+include::{snippets}/feature-upload/request-parts.adoc[]
+
+==== HTTP response
+
+include::{snippets}/feature-upload/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/feature-upload/response-fields.adoc[]
+
+
+[[resources-face-feature-get]]
+=== 얼굴 특징 조회
+
+==== HTTP request
+
+include::{snippets}/feature-get/http-request.adoc[]
+
+==== request-header 설명
+include::{snippets}/feature-get/request-headers.adoc[]
+
+==== HTTP response
+
+include::{snippets}/feature-get/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/feature-get/response-fields.adoc[]
+
+
+[[resources-face-features-get-all]]
+=== 모든 얼굴 특징 조회
+
+==== HTTP request
+
+include::{snippets}/face-features-get-all/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/face-features-get-all/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/face-features-get-all/response-fields.adoc[]
+
+[[resources-matching-filter]]
+== Matching Filter
+
+=== 응답 코드
+
+==== 성공 코드
+[cols="1,1,1,3"]
+|===
+| Code | HTTP Status | API Code | Description
+
+| GET_MATCHING_FILTER_SUCCESS
+| 200 OK
+| MF001
+| 매칭 필터 조회에 성공했습니다
+
+| UPDATE_MATCHING_FILTER_SUCCESS
+| 200 OK
+| MF002
+| 매칭 필터 설정에 성공했습니다
+
+|===
+
+==== 오류 코드
+[cols="1,1,1,3"]
+|===
+| Code | HTTP Status | API Code | Description
+
+| NULL_MEMBER_PROFILE
+| 404 Not Found
+| MF001
+| 존재하지 않는 회원 프로필입니다
+
+| INVALID_AGE_RANGE
+| 400 Bad Request
+| MF002
+| 유효하지 않은 나이 범위입니다
+
+| INVALID_FACE_FEATURE
+| 400 Bad Request
+| MF003
+| 유효하지 않은 얼굴 특징입니다
+
+| NULL_REGION
+| 404 Not Found
+| MF004
+| 존재하지 않는 지역입니다
+
+| NEGATIVE_FEATURE_INDEX
+| 400 Bad Request
+| MF005
+| 특징 인덱스는 0 이상이어야 합니다
+
+|===
 
 [[resources-matching-filter-create-update]]
 === 매칭 필터 생성/업데이트
@@ -452,12 +962,94 @@ include::{snippets}/matching-filter-get/http-response.adoc[]
 ==== response-body 설명
 include::{snippets}/matching-filter-get/response-fields.adoc[]
 
-:toc: left
-:toclevels: 2
-:sectlinks:
-
 [[resources-matching]]
 == Matching
+
+=== 응답 코드
+
+==== 성공 코드
+[cols="1,1,1,3"]
+|===
+| Code | HTTP Status | API Code | Description
+
+| GET_ACTIVE_MATCHINGS_SUCCESS
+| 200 OK
+| MC001
+| 활성화된 매칭 목록 조회에 성공했습니다
+
+| GET_MATCHED_RESULTS_SUCCESS
+| 200 OK
+| MC002
+| 매칭된 결과 목록 조회에 성공했습니다
+
+| EXECUTE_FREE_MATCHING_SUCCESS
+| 200 OK
+| MC003
+| 무료 매칭이 성공적으로 실행되었습니다
+
+| EXECUTE_PREMIUM_MATCHING_SUCCESS
+| 200 OK
+| MC004
+| 유료 매칭이 성공적으로 실행되었습니다
+
+| LIKE_MATCHING_SUCCESS
+| 200 OK
+| MC005
+| 매칭에 좋아요를 보냈습니다
+
+| GET_PERMANENT_MATCHES_SUCCESS
+| 200 OK
+| MC006
+| 성공된 매칭 결과 목록 조회에 성공했습니다
+
+|===
+
+==== 오류 코드
+[cols="1,1,1,3"]
+|===
+| Code | HTTP Status | API Code | Description
+
+| UNSUPPORTED_MATCHING_TYPE
+| 400 Bad Request
+| MC001
+| 지원하지 않는 매칭 타입입니다
+
+| MATCHING_RESULT_NOT_FOUND
+| 404 Not Found
+| MC002
+| 존재하지 않는 매칭 결과입니다
+
+| EXPIRED_MATCHING
+| 400 Bad Request
+| MC003
+| 만료된 매칭입니다
+
+| UNAUTHORIZED_USER
+| 403 Forbidden
+| MC004
+| 해당 매칭에 참여하지 않은 사용자입니다
+
+| MATCHING_EXECUTION_FAILED
+| 500 Internal Server Error
+| MC005
+| 매칭 실행 중 오류가 발생했습니다
+
+| DUPLICATE_LIKE_REQUEST
+| 400 Bad Request
+| MC006
+| 이미 좋아요를 누른 매칭입니다
+
+| INSUFFICIENT_MEMBERS
+| 400 Bad Request
+| MC007
+| 매칭 가능한 회원이 부족합니다
+
+| MATCHING_CLEANUP_FAILED
+| 500 Internal Server Error
+| MC008
+| 매칭 정리 중 오류가 발생했습니다
+
+|===
 
 [[resources-matching-free]]
 === 무료 매칭
@@ -550,3 +1142,537 @@ include::{snippets}/matching-like/http-response.adoc[]
 
 ==== response-body 설명
 include::{snippets}/matching-like/response-fields.adoc[]
+
+[[resources-chat]]
+== Chat
+
+=== 응답 코드
+
+==== 성공 코드
+[cols="1,1,1,3"]
+|===
+| Code | HTTP Status | API Code | Description
+
+| SEND_MESSAGE_SUCCESS
+| 200 OK
+| C001
+| 메시지 전송에 성공했습니다
+
+| READ_MESSAGES_SUCCESS
+| 200 OK
+| C002
+| 메시지 읽음 처리에 성공했습니다
+
+| GET_SUMMARIES_SUCCESS
+| 200 OK
+| C003
+| 채팅 요약 정보 조회에 성공했습니다
+
+| GET_MESSAGES_SUCCESS
+| 200 OK
+| C004
+| 메시지 조회에 성공했습니다
+
+| CREATE_CHAT_ROOM_SUCCESS
+| 200 OK
+| C005
+| 채팅방 생성에 성공했습니다
+
+| REPORT_SUCCESS
+| 200 OK
+| C006
+| 신고가 접수되었습니다
+
+|===
+
+==== 오류 코드
+[cols="1,1,1,3"]
+|===
+| Code | HTTP Status | API Code | Description
+
+| CHAT_ROOM_NOT_FOUND
+| 404 Not Found
+| C001
+| 채팅방을 찾을 수 없습니다
+
+| CHAT_ROOM_ACCESS_DENIED
+| 403 Forbidden
+| C002
+| 채팅방에 접근할 권한이 없습니다
+
+| CHAT_ROOM_ALREADY_BLOCKED
+| 400 Bad Request
+| C003
+| 이미 차단된 채팅방입니다
+
+| CHAT_ROOM_ALREADY_CLOSED
+| 400 Bad Request
+| C004
+| 이미 종료된 채팅방입니다
+
+| CHAT_REPORT_CATEGORY_NOT_FOUND
+| 400 Bad Request
+| C005
+| 유효하지 않은 신고 카테고리입니다
+
+| CHAT_ROOM_CLOSED
+| 400 Bad Request
+| C006
+| 종료된 채팅방입니다
+
+| CHAT_ROOM_BLOCKED
+| 400 Bad Request
+| C007
+| 차단된 채팅방입니다
+
+| CHAT_ROOM_WAITING
+| 400 Bad Request
+| C008
+| 대기 중인 채팅방입니다
+
+| MEMBER_NOT_FOUND
+| 404 Not Found
+| C009
+| 회원을 찾을 수 없습니다
+
+| INVALID_REPORT_CATEGORY
+| 400 Bad Request
+| C010
+| 유효하지 않은 신고 카테고리입니다
+
+| MESSAGE_SEND_FAILED
+| 500 Internal Server Error
+| C011
+| 메시지 전송에 실패했습니다
+
+| MESSAGE_READ_FAILED
+| 500 Internal Server Error
+| C012
+| 메시지 읽기 처리에 실패했습니다
+
+| INVALID_MESSAGE_CONTENT
+| 400 Bad Request
+| C013
+| 메시지 내용이 유효하지 않습니다
+
+| INVALID_ROOM_ID
+| 400 Bad Request
+| C014
+| 유효하지 않은 채팅방 ID입니다
+
+| INVALID_MEMBER_ID
+| 400 Bad Request
+| C015
+| 유효하지 않은 회원 ID입니다
+
+| MESSAGE_TOO_LONG
+| 400 Bad Request
+| C016
+| 메시지가 너무 깁니다
+
+| WEBSOCKET_CONNECTION_ERROR
+| 500 Internal Server Error
+| C017
+| 웹소켓 연결 오류가 발생했습니다
+
+|===
+
+=== 메시지 조회
+
+==== HTTP request
+
+include::{snippets}/chat-get-messages/http-request.adoc[]
+
+==== Path Parameters
+include::{snippets}/chat-get-messages/path-parameters.adoc[]
+
+==== Query Parameters (무한 스크롤)
+include::{snippets}/chat-get-messages/query-parameters.adoc[]
+
+==== HTTP response
+
+include::{snippets}/chat-get-messages/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/chat-get-messages/response-fields.adoc[]
+
+=== 메시지 조회 실패 (채팅방 없음)
+
+==== HTTP request
+
+include::{snippets}/chat-get-messages-404/http-request.adoc[]
+
+==== Path Parameters
+include::{snippets}/chat-get-messages-404/path-parameters.adoc[]
+
+==== HTTP response (404 Not Found)
+
+include::{snippets}/chat-get-messages-404/http-response.adoc[]
+
+=== 채팅방 요약 정보 조회
+
+==== HTTP request
+
+include::{snippets}/chat-get-summaries/http-request.adoc[]
+
+==== Query Parameters (무한 스크롤)
+include::{snippets}/chat-get-summaries/query-parameters.adoc[]
+
+==== HTTP response
+
+include::{snippets}/chat-get-summaries/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/chat-get-summaries/response-fields.adoc[]
+
+
+[[resources-websocket]]
+== Chat - 웹소켓
+
+아래부터는 웹소켓을 통한 채팅 기능에 대해 설명합니다.
+
+=== 웹소켓 연결 요청
+
+==== STOMP - CONNECT
+[source,http]
+----
+CONNECT /ws STOMP
+Authorization: <access_token>
+----
+[cols="1,1,3"]
+|===
+| Header | Type | Description
+
+| Authorization
+| String
+| 사용자 인증을 위한 JWT 토큰(access token)
+
+|===
+
+=== 웹소켓 구독 요청
+
+==== STOMP - SUBSCRIBE
+[source,http]
+----
+SUBSCRIBE /room/{roomId} STOMP
+----
+[cols="1,1,3"]
+|===
+| Destination | Type | Description
+
+| roomId
+| String
+| 구독할 채팅방의 ID(ex: /room/101)
+
+|===
+
+
+=== 메시지 전송 요청
+==== STOMP - SEND
+[source,http]
+----
+SEND /chat/send STOMP
+content-type: application/json
+
+{
+  "type": "NORMAL",
+  "content": "안녕하세요",
+  "roomId": 1,
+  "senderId": 1,
+  "receiverId": 2
+}
+----
+
+==== Payload 설명
+[cols="1,1,3"]
+|===
+| Field | Type | Description
+
+| type
+| String
+| 메시지 타입(NORMAL, BALANCE_GAME)
+
+| content
+| String
+| 메시지 내용
+
+| roomId
+| Number
+| 메시지를 전송할 채팅방의 ID
+
+| senderId
+| Number
+| 메시지를 전송하는 사용자의 ID
+
+| receiverId
+| Number
+| 메시지를 수신하는 사용자의 ID
+
+|===
+
+=== 읽음 처리 요청
+
+==== STOMP - SEND
+[source,http]
+----
+SEND /chat/read STOMP
+content-type: application/json
+
+{
+  "roomId": 1,
+  "memberId": 1
+}
+----
+
+==== Payload 설명
+[cols="1,1,3"]
+|===
+| Field | Type | Description
+
+| roomId
+| Number
+| 읽음 처리를 요청하는 채팅방의 ID
+
+| memberId
+| Number
+| 읽음 처리를 요청하는 사용자의 ID
+|===
+
+=== 구독 후 메시지 수신
+[source,http]
+----
+Payload
+content-type: application/json
+{
+    "id": "1",
+    "type": "NORMAL",
+    "content": "안녕하세요",
+    "roomId": 1,
+    "senderId": 1,
+    "receiverId": 2,
+    "timestamp": "2021-01-01T00:00:00.000Z",
+    "isRead": false
+}
+----
+[cols="1,1,3"]
+|===
+| Field | Type | Description
+
+| id
+| String
+| 메시지 ID
+
+| type
+| String
+| 메시지 유형 (NORMAL, BALANCE_GAME 등)
+
+| content
+| String
+| 메시지 내용
+
+| roomId
+| Number
+| 메시지가 속한 채팅방 ID
+
+| senderId
+| Number
+| 메시지를 보낸 사용자의 ID
+
+| receiverId
+| Number
+| 메시지를 받은 사용자의 ID
+
+| timestamp
+| String
+| 메시지가 전송된 시각
+
+| isRead
+| Boolean
+| 메시지를 읽었는지 여부
+|===
+
+=== 구독 후 읽음 처리 메시지 수신
+[source,http]
+----
+Payload
+content-type: application/json
+{
+    "readBy": 1
+}
+----
+[cols="1,1,3"]
+|===
+| Field | Type | Description
+| readBy | Number | 읽음 처리를 요청한 사용자의 ID
+|===
+
+[[resources-block]]
+== Block
+
+=== 응답 코드
+
+==== 성공 코드
+[cols="1,1,1,3"]
+|===
+| Code | HTTP Status | API Code | Description
+
+| BLOCK_SUCCESS
+| 200 OK
+| B001
+| 차단이 완료되었습니다
+
+|===
+
+[[notification-api]]
+== 알림(Notification) API
+
+=== 응답 코드
+
+==== 성공 코드
+[cols="1,1,1,3"]
+|===
+| Code | HTTP Status | API Code | Description
+
+| GET_NOTIFICATIONS_SUCCESS
+| 200 OK
+| N001
+| 알림 목록을 성공적으로 조회했습니다
+
+| READ_NOTIFICATION_SUCCESS
+| 200 OK
+| N002
+| 알림을 성공적으로 읽음 처리했습니다
+
+| COUNT_UNREAD_NOTIFICATIONS_SUCCESS
+| 200 OK
+| N003
+| 읽지 않은 알림 개수를 성공적으로 조회했습니다
+
+| REGISTER_FCM_TOKEN_SUCCESS
+| 200 OK
+| N004
+| FCM 토큰을 성공적으로 등록했습니다
+
+| GET_FCM_STATUS_SUCCESS
+| 200 OK
+| N005
+| FCM 상태를 성공적으로 조회했습니다
+
+| CHANGE_FCM_STATUS_SUCCESS
+| 200 OK
+| N006
+| FCM 상태를 성공적으로 변경했습니다
+
+|===
+
+==== 오류 코드
+[cols="1,1,1,3"]
+|===
+| Code | HTTP Status | API Code | Description
+
+| IS_NOT_OWNER
+| 403 Forbidden
+| N001
+| 알림의 소유자가 아닙니다
+
+| NULL_NOTIFICATION
+| 404 Not Found
+| N002
+| 존재하지 않는 알림입니다
+
+| FCM_CONFIGURATION_ERROR
+| 404 Not Found
+| F001
+| FCM 설정 실패
+
+| FCM_MESSAGING_ERROR
+| 404 Not Found
+| F002
+| 유효하지 않은 FCM 토큰
+
+|===
+
+[[notification-change-fcm-status]]
+== FCM 상태 변경
+
+=== HTTP request
+include::{snippets}/notification-change-fcm-status/http-request.adoc[]
+
+=== request-body 설명
+include::{snippets}/notification-change-fcm-status/request-fields.adoc[]
+
+=== HTTP response
+include::{snippets}/notification-change-fcm-status/http-response.adoc[]
+
+=== response-body 설명
+include::{snippets}/notification-change-fcm-status/response-fields.adoc[]
+
+
+[[notification-count-unread-notifications]]
+== 읽지 않은 알림 개수 조회
+
+=== HTTP request
+include::{snippets}/notification-count-unread-notifications/http-request.adoc[]
+
+=== HTTP response
+include::{snippets}/notification-count-unread-notifications/http-response.adoc[]
+
+=== response-body 설명
+include::{snippets}/notification-count-unread-notifications/response-fields.adoc[]
+
+
+[[notification-get-fcm-status]]
+== FCM 상태 조회
+
+=== HTTP request
+include::{snippets}/notification-get-fcm-status/http-request.adoc[]
+
+=== HTTP response
+include::{snippets}/notification-get-fcm-status/http-response.adoc[]
+
+=== response-body 설명
+include::{snippets}/notification-get-fcm-status/response-fields.adoc[]
+
+[[notification-get-notifications]]
+== 알림 목록 조회
+
+=== HTTP request
+include::{snippets}/notification-get-notifications/http-request.adoc[]
+
+=== HTTP response
+include::{snippets}/notification-get-notifications/http-response.adoc[]
+
+=== response-body 설명
+include::{snippets}/notification-get-notifications/response-fields.adoc[]
+
+
+[[notification-read-notification]]
+== 알림 읽음 처리
+
+=== HTTP request
+include::{snippets}/notification-read-notification/http-request.adoc[]
+
+=== Path Parameters
+include::{snippets}/notification-read-notification/path-parameters.adoc[]
+
+=== HTTP response
+include::{snippets}/notification-read-notification/http-response.adoc[]
+
+=== response-body 설명
+include::{snippets}/notification-read-notification/response-fields.adoc[]
+
+
+[[notification-register-fcm-token]]
+== FCM 토큰 등록
+
+=== HTTP request
+include::{snippets}/notification-register-fcm-token/http-request.adoc[]
+
+=== request-body 설명
+include::{snippets}/notification-register-fcm-token/request-fields.adoc[]
+
+=== HTTP response
+include::{snippets}/notification-register-fcm-token/http-response.adoc[]
+
+=== response-body 설명
+include::{snippets}/notification-register-fcm-token/response-fields.adoc[]
