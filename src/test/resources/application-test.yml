@@ -17,3 +17,12 @@ spring:
     console:
       enabled: true
       path: /h2-console
+      
+  main:
+    allow-bean-definition-overriding: true
+    
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 5.0.5
