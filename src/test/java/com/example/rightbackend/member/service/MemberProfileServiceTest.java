@@ -57,7 +57,7 @@ public class MemberProfileServiceTest extends BaseIntegrationTest {
     @DisplayName("중복 ID 체크 성공")
     void checkDuplicateIdTest_Success() {
         // Given
-        CheckIdRequest checkIdRequest = new CheckIdRequest("new_id_123");
+        CheckIdRequest checkIdRequest = new CheckIdRequest("validuser123");
 
         // When
         String result = memberProfileService.checkDuplicateId(checkIdRequest);
@@ -89,7 +89,7 @@ public class MemberProfileServiceTest extends BaseIntegrationTest {
         // Given
         SearchIdRequest searchIdRequest = new SearchIdRequest(
                 "존재하지 않는 이름",
-                "존재하지 않는 전화번호"
+                "010-9999-9999"
         );
 
         // When & Then
@@ -103,7 +103,7 @@ public class MemberProfileServiceTest extends BaseIntegrationTest {
     void resetPasswordTest_Success() {
         // Given
         Member member = dummyGenerator.generateSingleMember();
-        String newPassword = "newPassword123";
+        String newPassword = "NewPass123!";
         ResetPasswordRequest resetPasswordRequest = new ResetPasswordRequest(
                 member.getName(),
                 member.getPhoneNumber(),
@@ -123,8 +123,8 @@ public class MemberProfileServiceTest extends BaseIntegrationTest {
         // Given
         ResetPasswordRequest resetPasswordRequest = new ResetPasswordRequest(
                 "존재하지 않는 이름",
-                "존재하지 않는 전화번호",
-                "newPassword123"
+                "010-9999-9999",
+                "NewPass123!"
         );
 
         // When & Then
