@@ -21,8 +21,6 @@ spring:
   main:
     allow-bean-definition-overriding: true
     
-de:
-  flapdoodle:
+  data:
     mongodb:
-      embedded:
-        version: 5.0.5
+      uri: mongodb://localhost:27017/database?serverSelectionTimeoutMS=10000
