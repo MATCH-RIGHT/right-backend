@@ -3,6 +3,7 @@ package com.example.rightbackend.global.response.success;
 import org.springframework.http.HttpStatus;
 
 public enum MemberSuccess implements SuccessCode {
+    
     SIGN_UP_SUCCESS(HttpStatus.OK, "M001", "회원가입이 완료되었습니다"),
     CHECK_ID_SUCCESS(HttpStatus.OK, "M002", "사용 할 수 있는 아이디입니다"),
     GET_MEMBER_PAGE_SUCCESS(HttpStatus.OK, "M003", "회원 페이지 조회를 완료했습니다"),
