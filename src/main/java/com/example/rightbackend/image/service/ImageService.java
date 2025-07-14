@@ -94,6 +94,12 @@ public class ImageService {
     public void deleteImage(final LoginMember loginMember, final String fileName) {
         MemberImage image = memberImageRepository.findByName(fileName)
                 .orElseThrow(() -> new RestApiException(ImageError.IMAGE_NOT_FOUND));
+        
+        Member member = getMember(loginMember);
+        if (!image.getMember().getId().equals(member.getId())) {
+            throw new RestApiException(ImageError.UNAUTHORIZED_IMAGE_ACCESS);
+        }
+        
         s3Uploader.delete(image.getName());
         memberImageRepository.delete(image);
     }
@@ -102,6 +108,32 @@ public class ImageService {
     public FaceFeatureListResponse getAllFaceFeatures() {
         List<FaceFeature> faceFeatures = faceFeatureRepository.findAllByOrderByIdAsc();
         return new FaceFeatureListResponse(faceFeatures);
+    }
+    
+    @Transactional(readOnly = true)
+    public List<String> getMemberImageUrls(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RestApiException(MemberError.NULL_MEMBER));
+        
+        List<MemberImage> memberImages = member.getMemberImage();
+        return memberImages.stream()
+                .map(MemberImage::getUrl)
+                .collect(Collectors.toList());
+    }
+    
+    @Transactional(readOnly = true)
+    public List<ImageListResponse> getMemberImages(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RestApiException(MemberError.NULL_MEMBER));
+        
+        List<MemberImage> memberImages = member.getMemberImage();
+        return memberImages.stream()
+                .map(image -> new ImageListResponse(
+                        image.getId(),
+                        image.getName(),
+                        image.getUrl(),
+                        image.getImageIndex()))
+                .collect(Collectors.toList());
     }
 
     private Member getMember(LoginMember loginMember) {
