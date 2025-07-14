@@ -3,8 +3,9 @@ package com.example.rightbackend.global.response.error;
 import org.springframework.http.HttpStatus;
 
 public enum FCMError implements ErrorCode {
-    FCM_CONFIGURATION_ERROR(HttpStatus.NOT_FOUND, "F1", "FCM 설정 실패"),
-    ;
+
+    FCM_CONFIGURATION_ERROR(HttpStatus.NOT_FOUND, "F001", "FCM 설정 실패"),
+    FCM_MESSAGING_ERROR(HttpStatus.NOT_FOUND, "F002" , "유효하지 않은 FCM 토큰");
 
     private final HttpStatus httpStatus;
     private final String code;
