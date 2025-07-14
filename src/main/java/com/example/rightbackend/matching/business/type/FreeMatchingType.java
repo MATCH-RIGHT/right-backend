@@ -43,10 +43,11 @@ public class FreeMatchingType implements MatchingType {
         List<MatchingFilter> potentialMatchFilters;
         
         if (regionPartition != null) {
-            log.debug("지역 파티션 우선순위를 사용한 매칭: {}", regionPartition);
-            potentialMatchFilters = matchingFilterRepository.findByGenderPartitionWithRegionPriority(oppositeGender, regionPartition);
+            log.debug("지역 및 성별 파티션 우선순위를 사용한 매칭: {}", regionPartition);
+            potentialMatchFilters = matchingFilterRepository.findByMemberProfileGenderAndRegionPriority(oppositeGender, regionPartition);
         } else {
-            potentialMatchFilters = matchingFilterRepository.findByGenderPartition(oppositeGender);
+            log.debug("성별 파티션만 사용한 매칭");
+            potentialMatchFilters = matchingFilterRepository.findByMemberProfileGender(oppositeGender);
         }
         
         log.debug("잠재적 매칭 필터 수: {}", potentialMatchFilters.size());

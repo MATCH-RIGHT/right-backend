@@ -1,5 +1,7 @@
 package com.example.rightbackend.matching.business.controller.dto.response;
 
+import com.example.rightbackend.image.controller.dto.response.ImageListResponse;
+import com.example.rightbackend.image.service.ImageService;
 import com.example.rightbackend.matching.business.domain.MatchingResult;
 import com.example.rightbackend.member.domain.MemberProfile;
 
@@ -42,6 +44,30 @@ public record MatchingResultResponse(
         );
     }
     
+    public static MatchingResultResponse from(MatchingResult matchingResult, Long currentMemberId, ImageService imageService) {
+        MemberProfile otherProfile;
+        boolean liked;
+        
+        if (matchingResult.getSourceMemberProfile().getId().equals(currentMemberId)) {
+            otherProfile = matchingResult.getTargetMemberProfile();
+            liked = matchingResult.isSourceLiked();
+        } else {
+            otherProfile = matchingResult.getSourceMemberProfile();
+            liked = matchingResult.isTargetLiked();
+        }
+        
+        return new MatchingResultResponse(
+                matchingResult.getId(),
+                MemberProfileDto.from(otherProfile, imageService),
+                matchingResult.getCompatibilityScore(),
+                matchingResult.getMatchingType(),
+                matchingResult.getCreatedAt(),
+                matchingResult.getExpiresAt(),
+                liked,
+                matchingResult.isMatched()
+        );
+    }
+    
     public record MemberProfileDto(
             Long id,
             String nickname,
@@ -51,14 +77,14 @@ public record MatchingResultResponse(
             String height,
             String bodyType,
             String job,
-            List<String> imageUrls
+            List<ImageListResponse> images
     ) {
 
         public static MemberProfileDto from(MemberProfile memberProfile) {
             String location = memberProfile.getMemberProfileToLocations().isEmpty() ? 
                     null : memberProfile.getMemberProfileToLocations().get(0).getLocation().getName();
             
-            List<String> imageUrls = new ArrayList<>();
+            List<ImageListResponse> images = new ArrayList<>();
             
             return new MemberProfileDto(
                     memberProfile.getId(),
@@ -69,7 +95,26 @@ public record MatchingResultResponse(
                     memberProfile.getHeight(),
                     memberProfile.getBody_type(),
                     memberProfile.getJob(),
-                    imageUrls
+                    images
+            );
+        }
+        
+        public static MemberProfileDto from(MemberProfile memberProfile, ImageService imageService) {
+            String location = memberProfile.getMemberProfileToLocations().isEmpty() ? 
+                    null : memberProfile.getMemberProfileToLocations().get(0).getLocation().getName();
+            
+            List<ImageListResponse> images = imageService.getMemberImages(memberProfile.getId());
+            
+            return new MemberProfileDto(
+                    memberProfile.getId(),
+                    memberProfile.getNickname(),
+                    memberProfile.getGender(),
+                    memberProfile.getAge(),
+                    location,
+                    memberProfile.getHeight(),
+                    memberProfile.getBody_type(),
+                    memberProfile.getJob(),
+                    images
             );
         }
     }

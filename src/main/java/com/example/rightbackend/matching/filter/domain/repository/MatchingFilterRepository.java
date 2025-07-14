@@ -22,4 +22,19 @@ public interface MatchingFilterRepository extends JpaRepository<MatchingFilter, 
            "(mf.regionPartition = :regionPartition OR mf.regionPartition IS NULL) " +
            "ORDER BY CASE WHEN mf.regionPartition = :regionPartition THEN 0 ELSE 1 END")
     List<MatchingFilter> findByGenderPartitionWithRegionPriority(String genderPartition, String regionPartition);
+    
+    @Query("SELECT mf FROM MatchingFilter mf " +
+           "JOIN mf.memberProfile mp " +
+           "WHERE mp.gender = :gender " +
+           "ORDER BY mp.id")
+    List<MatchingFilter> findByMemberProfileGender(String gender);
+    
+    @Query("SELECT mf FROM MatchingFilter mf " +
+           "JOIN mf.memberProfile mp " +
+           "LEFT JOIN mp.memberProfileToLocations mpl " +
+           "LEFT JOIN mpl.location loc " +
+           "WHERE mp.gender = :gender AND " +
+           "(loc.name = :regionPartition OR loc IS NULL) " +
+           "ORDER BY CASE WHEN loc.name = :regionPartition THEN 0 ELSE 1 END, mp.id")
+    List<MatchingFilter> findByMemberProfileGenderAndRegionPriority(String gender, String regionPartition);
 }
