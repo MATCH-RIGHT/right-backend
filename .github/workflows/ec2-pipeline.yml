@@ -42,8 +42,9 @@ jobs:
       - name: firebase_service_key.json 구성
         run: |
           cd ./src/main/resources
-          touch ./firebase_service_key.json
-          echo "${{ secrets.FCM_KEY }}" > ./firebase_service_key.json
+          cat > ./firebase_service_key.json << 'EOF'
+          ${{ secrets.FCM_KEY }}
+          EOF
           ls -a .
 
       - name: Grant execute permission for Gradle
