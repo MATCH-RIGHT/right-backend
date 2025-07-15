@@ -24,3 +24,9 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/database?serverSelectionTimeoutMS=10000
+
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 4.0.12
