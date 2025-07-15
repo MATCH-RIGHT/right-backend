@@ -110,8 +110,6 @@ test {
 }
 
 asciidoctor {
-	dependsOn test
-	inputs.dir snippetsDir
 	configurations 'asciidoctorExt'
 	attributes 'snippets': snippetsDir
 	sourceDir = file('src/docs/asciidoc')
@@ -121,12 +119,11 @@ asciidoctor {
 		file(snippetsDir).mkdirs()
 	}
 	
-	if (gradle.startParameter.excludedTaskNames.contains('test')) {
-		inputs.dir snippetsDir
-	} else {
+	if (!gradle.startParameter.excludedTaskNames.contains('test')) {
 		dependsOn test
-		inputs.dir snippetsDir
 	}
+
+	inputs.dir snippetsDir
 }
 
 tasks.register('copyDocumentToStatic', Copy) {
@@ -135,7 +132,10 @@ tasks.register('copyDocumentToStatic', Copy) {
 	into("src/main/resources/static/docs")
 }
 
-// Only run copyDocumentToStatic for bootJar, not for build
+processResources {
+	dependsOn tasks.named('copyDocumentToStatic')
+}
+
 bootJar {
 	dependsOn tasks.named('copyDocumentToStatic')
 }
