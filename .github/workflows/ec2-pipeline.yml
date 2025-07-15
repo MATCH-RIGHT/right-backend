@@ -52,6 +52,7 @@ jobs:
 
       - name: Run asciidoc mv static/html
         run: |
+          mkdir -p build/generated-snippets
           ./gradlew asciidoctor -x test
           mkdir -p src/main/resources/static/docs
           cp -r build/docs/asciidoc/* src/main/resources/static/docs/

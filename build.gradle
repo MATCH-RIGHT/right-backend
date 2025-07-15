@@ -116,6 +116,17 @@ asciidoctor {
 	attributes 'snippets': snippetsDir
 	sourceDir = file('src/docs/asciidoc')
 	outputDir = file("$buildDir/docs/asciidoc")
+
+	doFirst {
+		file(snippetsDir).mkdirs()
+	}
+	
+	if (gradle.startParameter.excludedTaskNames.contains('test')) {
+		inputs.dir snippetsDir
+	} else {
+		dependsOn test
+		inputs.dir snippetsDir
+	}
 }
 
 tasks.register('copyDocumentToStatic', Copy) {
