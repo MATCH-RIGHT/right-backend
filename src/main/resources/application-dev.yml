@@ -29,3 +29,9 @@ spring:
     mongodb:
       uri: mongodb://localhost:27017/right
       database: right
+
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 4.0.12
