@@ -53,7 +53,9 @@ jobs:
       - name: Run asciidoc mv static/html
         run: |
           mkdir -p build/generated-snippets
-          ./gradlew copyDocumentToStatic -x test
+          ./gradlew asciidoctor -x test
+          mkdir -p src/main/resources/static/docs
+          cp -r build/docs/asciidoc/* src/main/resources/static/docs/
 
       - name: PR and PUSH Test Verification
         run: ./gradlew build -x test

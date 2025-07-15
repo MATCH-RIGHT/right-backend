@@ -132,9 +132,10 @@ asciidoctor {
 tasks.register('copyDocumentToStatic', Copy) {
 	dependsOn asciidoctor
 	from("$buildDir/docs/asciidoc")
-	into("$buildDir/resources/main/static/docs")
+	into("src/main/resources/static/docs")
 }
 
+// Only run copyDocumentToStatic for bootJar, not for build
 bootJar {
 	dependsOn tasks.named('copyDocumentToStatic')
 }
