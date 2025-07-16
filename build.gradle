@@ -136,3 +136,7 @@ bootJar {
 resolveMainClassName {
 	dependsOn tasks.named('copyDocumentToStatic')
 }
+
+jar {
+	dependsOn tasks.named('copyDocumentToStatic')
+}
