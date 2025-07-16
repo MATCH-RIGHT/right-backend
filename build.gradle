@@ -113,29 +113,22 @@ asciidoctor {
 	configurations 'asciidoctorExt'
 	attributes 'snippets': snippetsDir
 	sourceDir = file('src/docs/asciidoc')
-	outputDir = file("$buildDir/docs/asciidoc")
+	outputDir = file("${layout.buildDirectory.get()}/docs/asciidoc")
 
 	doFirst {
 		file(snippetsDir).mkdirs()
 	}
 	
-	if (!gradle.startParameter.excludedTaskNames.contains('test')) {
-		dependsOn test
-	}
-
+	dependsOn test
 	inputs.dir snippetsDir
 }
 
 tasks.register('copyDocumentToStatic', Copy) {
 	dependsOn asciidoctor
-	from("$buildDir/docs/asciidoc")
+	from("${layout.buildDirectory.get()}/docs/asciidoc")
 	into("src/main/resources/static/docs")
 }
 
-processResources {
-	dependsOn tasks.named('copyDocumentToStatic')
-}
-
-bootJar {
+jar {
 	dependsOn tasks.named('copyDocumentToStatic')
 }
