@@ -126,9 +126,9 @@ asciidoctor {
 tasks.register('copyDocumentToStatic', Copy) {
 	dependsOn asciidoctor
 	from("${layout.buildDirectory.get()}/docs/asciidoc")
-	into("src/main/resources/static/docs")
+	into("${layout.buildDirectory.get()}/resources/main/static/docs")
 }
 
-jar {
+bootJar {
 	dependsOn tasks.named('copyDocumentToStatic')
 }
