@@ -4,70 +4,7 @@
 :sectlinks:
 :source-highlighter: highlightjs
 
-[[overview]]
-== 개요
-
 Right Backend의 REST API 문서입니다.
-
-[[http-verbs]]
-== HTTP 동사
-
-REST API는 가능한 표준 HTTP 동사를 사용합니다.
-
-|===
-| 동사 | 용도
-
-| `GET`
-| 리소스를 가져올 때 사용
-
-| `POST`
-| 새 리소스를 만들 때 사용
-
-| `PUT`
-| 기존 리소스를 수정할 때 사용
-
-| `PATCH`
-| 기존 리소스의 일부를 수정할 때 사용
-
-| `DELETE`
-| 기존 리소스를 삭제할 때 사용
-|===
-
-[[http-status-codes]]
-== HTTP 상태 코드
-
-REST API는 가능한 표준 HTTP 상태 코드를 사용합니다.
-
-|===
-| 상태 코드 | 용도
-
-| `200 OK`
-| 요청을 성공적으로 처리함
-
-| `201 Created`
-| 새 리소스를 성공적으로 생성함
-
-| `204 No Content`
-| 요청을 성공적으로 처리했지만 반환할 데이터가 없음
-
-| `400 Bad Request`
-| 잘못된 요청
-
-| `401 Unauthorized`
-| 인증되지 않은 요청
-
-| `403 Forbidden`
-| 권한이 없는 요청
-
-| `404 Not Found`
-| 존재하지 않는 리소스에 대한 요청
-
-| `409 Conflict`
-| 리소스의 현재 상태와 충돌하는 요청
-
-| `500 Internal Server Error`
-| 서버 내부 오류
-|===
 
 [[resources-post]]
 == Authentication
@@ -1524,7 +1461,7 @@ content-type: application/json
 |===
 
 [[notification-api]]
-== 알림(Notification) API
+= Notification
 
 === 응답 코드
 
