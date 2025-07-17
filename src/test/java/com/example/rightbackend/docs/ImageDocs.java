@@ -124,39 +124,34 @@ public class ImageDocs extends BaseRestDocsTest {
     @Test
     @DisplayName("API - 얼굴 특징 분석")
     void analysisFace() throws Exception {
-        String message = ImageResponse.FEATURE_UPLOAD_SUCCESS.getMessage();
-        SuccessResponse<String> response = SuccessResponse.of(ImageSuccess.MY_FEATURE_UPLOAD_SUCCESS, message);
-        ClassPathResource imgRes = new ClassPathResource("images/winter.jpg");
-        try (InputStream is = imgRes.getInputStream()) {
+        SuccessResponse<ImageResponse> response = SuccessResponse.of(ImageSuccess.MY_FEATURE_UPLOAD_SUCCESS);
+        
+        MockMultipartFile mockImage = new MockMultipartFile(
+                "image",
+                "test.jpg",
+                MediaType.IMAGE_JPEG_VALUE,
+                "test image content".getBytes()
+        );
 
-            MockMultipartFile mockImage =
-                    new MockMultipartFile(
-                            "image",
-                            "winter.jpg",
-                            MediaType.IMAGE_JPEG_VALUE,
-                            is
-                    );
+        doReturn(response).when(imageController).detectFaces(any(), any());
 
-            doReturn(response).when(imageController).uploadMultiImage(any(), any());
-
-            this.mockMvc.perform(multipart("/api/image/upload-feature")
-                            .file("image", mockImage.getBytes())
-                            .header("Authorization", GIVEN_ACCESS_TOKEN)
-                            .contentType(MediaType.MULTIPART_FORM_DATA))
-                    .andExpect(status().isOk())
-                    .andDo(document("feature-upload",
-                            requestHeaders(
-                                    headerWithName("Authorization").description("액세스 토큰")
-                            ),
-                            requestParts(
-                                    partWithName("image").description("얼굴 특징 분석할 이미지")
-                            ),
-                            responseFields(
-                                    fieldWithPath("code").description("성공 코드"),
-                                    fieldWithPath("result").description("얼굴 특징 분석 결과")
-                            )
-                    ));
-        }
+        this.mockMvc.perform(multipart("/api/image/upload-feature")
+                        .file(mockImage)
+                        .header("Authorization", GIVEN_ACCESS_TOKEN)
+                        .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isOk())
+                .andDo(document("feature-upload",
+                        requestHeaders(
+                                headerWithName("Authorization").description("액세스 토큰")
+                        ),
+                        requestParts(
+                                partWithName("image").description("얼굴 특징 분석할 이미지")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").description("성공 코드"),
+                                fieldWithPath("result").description("얼굴 특징 분석 결과").optional()
+                        )
+                ));
     }
 
     @Test
