@@ -51,7 +51,7 @@ public class MemberProfileDocs extends BaseRestDocsTest {
                                 fieldWithPath("phoneNumber").description("전화번호"),
                                 fieldWithPath("nickname").description("닉네임"),
                                 fieldWithPath("gender").description("성별"),
-                                fieldWithPath("birthday").description("생년월일(YYYYMMDD)"),
+                                fieldWithPath("birthday").description("생년월일(YYYY-MM-DD)"),
                                 fieldWithPath("locationName").description("지역명"),
                                 fieldWithPath("height").description("키"),
                                 fieldWithPath("body_type").description("체형"),
@@ -308,7 +308,7 @@ public class MemberProfileDocs extends BaseRestDocsTest {
                 "01012345678",          // phoneNumber
                 "길동",                 // nickname
                 "남성",                 // gender
-                "19900101",             // birthday
+                "1990-01-01",             // birthday
                 "서울",                  // locationName
                 "180",                  // height
                 "athletic",             // body_type
