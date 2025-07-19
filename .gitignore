@@ -44,3 +44,4 @@ out/
 
 ### LOG ###
 /logs
+src/main/resources/firebase_service_key.json
