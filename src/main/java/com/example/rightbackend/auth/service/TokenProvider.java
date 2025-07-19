@@ -26,7 +26,7 @@ public class TokenProvider {
     // AccessToken
     public String generateAccessToken(final LoginMember loginMember) {
         Claims claims = getClaimsFrom(loginMember);
-        return BEARER_PREFIX + getTokenFrom(claims, jwtProperties.getAccessTokenValidTime());
+        return getTokenFrom(claims, jwtProperties.getAccessTokenValidTime());
     }
 
     private Claims getClaimsFrom(final LoginMember loginMember) {
