@@ -222,7 +222,6 @@ public class MemberProfileServiceTest extends BaseIntegrationTest {
     private SignUpRequest createSignUpRequest() {
         SignUpRequest signUpRequest = new SignUpRequest(
                 DummyGenerator.GIVEN_NAME,
-                DummyGenerator.GIVEN_PROVIDER,
                 DummyGenerator.GIVEN_PROVIDER_ID,
                 DummyGenerator.GIVEN_PASSWORD,
                 DummyGenerator.GIVEN_PHONE_NUMBER,

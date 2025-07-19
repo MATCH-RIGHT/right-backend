@@ -28,8 +28,6 @@ public class Member {
     @Column
     private String name;
 
-    @Column
-    private String provider;
 
     @Column
     private String providerId;
@@ -77,7 +75,6 @@ public class Member {
     public static Member of(final EncodeMember request) {
         Member member = new Member();
         member.name = request.name();
-        member.provider = request.provider();
         member.providerId = request.providerId();
         member.password = request.password();
         member.phoneNumber = request.phoneNumber();

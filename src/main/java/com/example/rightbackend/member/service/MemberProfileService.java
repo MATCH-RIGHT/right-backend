@@ -89,7 +89,6 @@ public class MemberProfileService {
 
     private EncodeMember encodeForMember(final SignUpRequest request) {
         return new EncodeMember(request.name(),
-                request.provider(),
                 request.providerId(),
                 passwordEncoder.encrypt(request.password()),
                 TextEncoder.encrypt(request.phoneNumber()));

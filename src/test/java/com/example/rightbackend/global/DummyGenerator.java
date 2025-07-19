@@ -37,7 +37,6 @@ public class DummyGenerator {
     @Autowired FCMTokenRepository fcmTokenRepository;
 
     public static final String GIVEN_NAME = "tmpName";
-    public static final String GIVEN_PROVIDER = "tmpProvider";
     public static final String GIVEN_PROVIDER_ID = "testuser123";
     public static final String GIVEN_PASSWORD = "TestPass123!";
     public static final String GIVEN_PHONE_NUMBER = "010-1234-5678";
@@ -74,7 +73,6 @@ public class DummyGenerator {
         
         EncodeMember signUp = new EncodeMember(
                 GIVEN_NAME + uniqueSuffix, 
-                GIVEN_PROVIDER, 
                 GIVEN_PROVIDER_ID + uniqueSuffix, 
                 GIVEN_PASSWORD,
                 uniquePhoneNumber);

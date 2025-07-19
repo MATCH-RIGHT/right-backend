@@ -55,7 +55,6 @@ public class ImageServiceTest {
         // Member 객체 생성
         EncodeMember encodeMember = new EncodeMember(
                 "테스트 사용자",
-                "test-provider",
                 "test-provider-id",
                 "test-password",
                 "010-1234-5678"

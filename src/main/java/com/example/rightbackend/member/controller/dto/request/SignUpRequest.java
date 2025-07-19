@@ -3,7 +3,6 @@ package com.example.rightbackend.member.controller.dto.request;
 import java.util.List;
 
 public record SignUpRequest (String name,
-                             String provider,
                              String providerId,
                              String password,
                              String phoneNumber,

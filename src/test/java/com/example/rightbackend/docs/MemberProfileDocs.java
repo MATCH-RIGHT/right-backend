@@ -46,7 +46,6 @@ public class MemberProfileDocs extends BaseRestDocsTest {
                 .andDo(document("member-signUp",
                         requestFields(
                                 fieldWithPath("name").description("이름"),
-                                fieldWithPath("provider").description("회원가입 한 서비스 이름"),
                                 fieldWithPath("providerId").description("아이디"),
                                 fieldWithPath("password").description("비밀번호"),
                                 fieldWithPath("phoneNumber").description("전화번호"),
@@ -304,7 +303,6 @@ public class MemberProfileDocs extends BaseRestDocsTest {
     private SignUpRequest createSampleSignUpRequest() {
         return new SignUpRequest(
                 "홍길동",                // name
-                "google",               // provider
                 "google-1234",          // providerId
                 "securePassword",       // password
                 "01012345678",          // phoneNumber
