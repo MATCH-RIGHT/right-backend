@@ -99,10 +99,17 @@ public class AuthService {
 
     @Transactional
     public AuthToken reissue(final AuthToken authToken) {
+        validateAuthToken(authToken);
         tokenExipreCheck(authToken);
         LoginMember loginMember = tokenProvider.getLoginFromToken(authToken.refreshToken());
         String newAccessToken = tokenProvider.generateAccessToken(loginMember);
         return new AuthToken(newAccessToken, authToken.refreshToken());
+    }
+
+    private void validateAuthToken(final AuthToken authToken) {
+        if (authToken.refreshToken() == null || authToken.refreshToken().trim().isEmpty()) {
+            throw new RestApiException(TokenError.NULL_REFRESH_TOKEN);
+        }
     }
 
     private void tokenExipreCheck(final AuthToken authToken) {
