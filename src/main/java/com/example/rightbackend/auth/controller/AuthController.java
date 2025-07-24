@@ -40,7 +40,7 @@ public class AuthController {
                 authService.reissue(authToken));
     }
 
-    @DeleteMapping("/withdraw")
+    @PatchMapping("/withdraw")
     public ResponseEntity<SuccessResponse<String>> withDraw(@Login LoginMember loginMember) {
         return SuccessResponse.of(
                 AuthSuccess.WITH_DRAW_SUCCESS,
