@@ -59,6 +59,8 @@ public class Member {
 
     public MemberPageResponse getMemberPageResopnse() {
         EncodeMemberPage encodeMemberPage = memberProfile.getMemberPage();
+        String nickname = encodeMemberPage.nickname() != null ?
+                TextEncoder.decrypt(encodeMemberPage.nickname()) : "";
         String locationName = encodeMemberPage.locationName() != null ? 
                 TextEncoder.decrypt(encodeMemberPage.locationName()) : "";
         String height = encodeMemberPage.height() != null ?
@@ -71,7 +73,7 @@ public class Member {
                 TextEncoder.decrypt(encodeMemberPage.myself()) : "";
                 
         return new MemberPageResponse(name,
-                encodeMemberPage.nickname(),
+                nickname,
                 locationName,
                 height,
                 bodyType,

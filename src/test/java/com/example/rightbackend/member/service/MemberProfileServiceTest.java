@@ -73,7 +73,7 @@ public class MemberProfileServiceTest extends BaseIntegrationTest {
         Member member = dummyGenerator.generateSingleMember();
         SearchIdRequest searchIdRequest = new SearchIdRequest(
                 member.getName(),
-                member.getPhoneNumber()
+                TextEncoder.decrypt(member.getPhoneNumber())
         );
 
         // When
@@ -106,7 +106,7 @@ public class MemberProfileServiceTest extends BaseIntegrationTest {
         String newPassword = "NewPass123!";
         ResetPasswordRequest resetPasswordRequest = new ResetPasswordRequest(
                 member.getName(),
-                member.getPhoneNumber(),
+                TextEncoder.decrypt(member.getPhoneNumber()),
                 newPassword
         );
 
@@ -204,7 +204,7 @@ public class MemberProfileServiceTest extends BaseIntegrationTest {
         
         Member updatedMember = memberRepository.findById(member.getId()).orElseThrow();
         Assertions.assertEquals(TextEncoder.encrypt(newNickname), updatedMember.getMemberProfile().getNickname());
-        Assertions.assertEquals(newMyself, updatedMember.getMemberProfile().getMyself());
+        Assertions.assertEquals(TextEncoder.encrypt(newMyself), updatedMember.getMemberProfile().getMyself());
         
         List<String> updatedInterests = updatedMember.getMemberProfile().getMemberProfileToInterests().stream()
                 .map(link -> link.getInterest().getName())

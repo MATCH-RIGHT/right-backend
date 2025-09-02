@@ -96,7 +96,7 @@ public class NotificationService {
     @Transactional
     public void saveLikeNotification(MatchingResult matchingResult) {
         Member targetMember = matchingResult.getTargetMemberProfile().getMember();
-        String sourceNickname = matchingResult.getSourceMemberProfile().getNickname();
+        String sourceNickname = matchingResult.getSourceMemberProfile().getDecryptedNickname();
         
         Notification notification = Notification.createLikeNotification(targetMember, matchingResult.getId(), sourceNickname);
         notificationRepository.save(notification);
@@ -105,12 +105,12 @@ public class NotificationService {
     @Transactional
     public void saveMatchNotification(Matched matched) {
         Member member1 = matched.getMemberProfile1().getMember();
-        String nickname2 = matched.getMemberProfile2().getNickname();
+        String nickname2 = matched.getMemberProfile2().getDecryptedNickname();
         Notification notification1 = Notification.createMatchNotification(member1, matched.getId(), nickname2);
         notificationRepository.save(notification1);
         
         Member member2 = matched.getMemberProfile2().getMember();
-        String nickname1 = matched.getMemberProfile1().getNickname();
+        String nickname1 = matched.getMemberProfile1().getDecryptedNickname();
         Notification notification2 = Notification.createMatchNotification(member2, matched.getId(), nickname1);
         notificationRepository.save(notification2);
     }

@@ -75,7 +75,7 @@ public class DummyGenerator {
                 GIVEN_NAME + uniqueSuffix, 
                 GIVEN_PROVIDER_ID + uniqueSuffix, 
                 GIVEN_PASSWORD,
-                uniquePhoneNumber);
+                TextEncoder.encrypt(uniquePhoneNumber));
         return memberRepository.save(Member.of(signUp));
     }
 

@@ -51,7 +51,7 @@ public class MatchingFilter {
     public static MatchingFilter of(MemberProfile memberProfile) {
         MatchingFilter filter = new MatchingFilter();
         filter.memberProfile = memberProfile;
-        filter.genderPartition = memberProfile.getGender();
+        filter.genderPartition = memberProfile.getDecryptedGender();
         return filter;
     }
     

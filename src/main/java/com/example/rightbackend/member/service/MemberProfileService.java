@@ -107,7 +107,7 @@ public class MemberProfileService {
                 TextEncoder.encrypt(request.body_type()),
                 TextEncoder.encrypt(request.job()),
                 request.interests(),
-                request.myself(),
+                TextEncoder.encrypt(request.myself()),
                 TextEncoder.encrypt(request.gender()));
     }
 
@@ -128,7 +128,8 @@ public class MemberProfileService {
 
     @Transactional
     public String searchId(final SearchIdRequest searchIdRequest) {
-        Member member = memberRepository.findFirstByNameAndPhoneNumber(searchIdRequest.name(), searchIdRequest.phoneNumber()).orElseThrow(()
+        String encryptedPhoneNumber = TextEncoder.encrypt(searchIdRequest.phoneNumber());
+        Member member = memberRepository.findFirstByNameAndPhoneNumber(searchIdRequest.name(), encryptedPhoneNumber).orElseThrow(()
                 -> new RestApiException(MemberError.NULL_MEMBER));
         return member.getProviderId();
     }
@@ -136,7 +137,8 @@ public class MemberProfileService {
     @Transactional
     public String resetPassword(final ResetPasswordRequest resetPasswordRequest) {
         validateResetPasswordRequest(resetPasswordRequest);
-        Member member = memberRepository.findFirstByNameAndPhoneNumber(resetPasswordRequest.name(), resetPasswordRequest.phoneNumber()).orElseThrow(()
+        String encryptedPhoneNumber = TextEncoder.encrypt(resetPasswordRequest.phoneNumber());
+        Member member = memberRepository.findFirstByNameAndPhoneNumber(resetPasswordRequest.name(), encryptedPhoneNumber).orElseThrow(()
                 -> new RestApiException(MemberError.NULL_MEMBER));
         member.setPassword(passwordEncoder.encrypt(resetPasswordRequest.newPassword()));
         return MemberResponse.PASSWORD_CHANGE_SUCCESS.getMessage();
@@ -173,7 +175,7 @@ public class MemberProfileService {
         if (request.height() != null) memberProfile.setHeight(TextEncoder.encrypt(request.height()));
         if (request.body_type() != null) memberProfile.setBody_type(TextEncoder.encrypt(request.body_type()));
         if (request.job() != null) memberProfile.setJob(TextEncoder.encrypt(request.job()));
-        if (request.myself() != null) memberProfile.setMyself(request.myself());
+        if (request.myself() != null) memberProfile.setMyself(TextEncoder.encrypt(request.myself()));
         
         if (request.interests() != null) {
             memberProfile.getMemberProfileToInterests().clear();

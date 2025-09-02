@@ -36,7 +36,7 @@ public class FcmSender {
     @Async
     public void sendLikeNotification(MatchingResult matchingResult) {
         Member targetMember = matchingResult.getTargetMemberProfile().getMember();
-        String sourceNickname = matchingResult.getSourceMemberProfile().getNickname();
+        String sourceNickname = matchingResult.getSourceMemberProfile().getDecryptedNickname();
 
         if(!isAcceptedFCM(targetMember)) return;
 
@@ -58,7 +58,7 @@ public class FcmSender {
     @Async
     public void sendMatchNotification(Matched matched) {
         Member member1 = matched.getMemberProfile1().getMember();
-        String nickname2 = matched.getMemberProfile2().getNickname();
+        String nickname2 = matched.getMemberProfile2().getDecryptedNickname();
 
         if(isAcceptedFCM(member1)) {
             Notification notification1 = Notification.builder()
@@ -77,7 +77,7 @@ public class FcmSender {
         }
 
         Member member2 = matched.getMemberProfile2().getMember();
-        String nickname1 = matched.getMemberProfile1().getNickname();
+        String nickname1 = matched.getMemberProfile1().getDecryptedNickname();
 
         if(isAcceptedFCM(member2)) {
             Notification notification2 = Notification.builder()

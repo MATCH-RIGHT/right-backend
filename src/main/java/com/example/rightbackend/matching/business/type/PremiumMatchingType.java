@@ -36,7 +36,7 @@ public class PremiumMatchingType implements MatchingType {
             log.warn("유료 매칭을 요청했지만 이상형 얼굴 특징이 설정되지 않았습니다. 회원 ID: {}", memberProfile.getId());
         }
         
-        String oppositeGender = "MALE".equals(memberProfile.getGender()) ? "FEMALE" : "MALE";
+        String oppositeGender = "MALE".equals(memberProfile.getDecryptedGender()) ? "FEMALE" : "MALE";
         
         Integer minAge = filter.getMinAge();
         Integer maxAge = filter.getMaxAge();
@@ -44,7 +44,7 @@ public class PremiumMatchingType implements MatchingType {
         String regionPartition = filter.getRegionPartition();
         
         log.debug("유료 매칭 실행 - 회원 ID: {}, 성별: {}, 이성: {}, 나이 범위: {}-{}, 지역: {}", 
-                memberProfile.getId(), memberProfile.getGender(), oppositeGender, minAge, maxAge, regionPartition);
+                memberProfile.getId(), memberProfile.getDecryptedGender(), oppositeGender, minAge, maxAge, regionPartition);
         
         List<MatchingFilter> potentialMatchFilters;
         

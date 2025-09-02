@@ -4,6 +4,7 @@ import com.example.rightbackend.auth.domain.Member;
 import com.example.rightbackend.member.controller.dto.EncodeMemberPage;
 import com.example.rightbackend.member.controller.dto.EncodeMemberProfile;
 import com.example.rightbackend.member.controller.dto.response.MemberPageResponse;
+import com.example.rightbackend.member.service.TextEncoder;
 import com.example.rightbackend.rekognition.domain.FaceFeature;
 import com.example.rightbackend.rekognition.domain.MyFaceFeature;
 import com.example.rightbackend.global.exception.RestApiException;
@@ -142,12 +143,42 @@ public class MemberProfile implements Persistable<Long> {
         }
         
         try {
-            int birthYear = Integer.parseInt(birthday.substring(0, 4));
+            String decryptedBirthday = TextEncoder.decrypt(birthday);
+            int birthYear = Integer.parseInt(decryptedBirthday.substring(0, 4));
             int currentYear = java.time.LocalDate.now().getYear();
             return currentYear - birthYear + 1;
         } catch (Exception e) {
             return null;
         }
+    }
+    
+    // 복호화된 값을 반환하는 메서드들
+    public String getDecryptedNickname() {
+        return nickname != null ? TextEncoder.decrypt(nickname) : "";
+    }
+    
+    public String getDecryptedGender() {
+        return gender != null ? TextEncoder.decrypt(gender) : "";
+    }
+    
+    public String getDecryptedBirthday() {
+        return birthday != null ? TextEncoder.decrypt(birthday) : "";
+    }
+    
+    public String getDecryptedHeight() {
+        return height != null ? TextEncoder.decrypt(height) : "";
+    }
+    
+    public String getDecryptedBodyType() {
+        return body_type != null ? TextEncoder.decrypt(body_type) : "";
+    }
+    
+    public String getDecryptedJob() {
+        return job != null ? TextEncoder.decrypt(job) : "";
+    }
+    
+    public String getDecryptedMyself() {
+        return myself != null ? TextEncoder.decrypt(myself) : "";
     }
     
     public String getLocationPartition() {

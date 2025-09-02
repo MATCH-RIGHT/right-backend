@@ -88,13 +88,13 @@ public record MatchingResultResponse(
             
             return new MemberProfileDto(
                     memberProfile.getId(),
-                    memberProfile.getNickname(),
-                    memberProfile.getGender(),
+                    memberProfile.getDecryptedNickname(),
+                    memberProfile.getDecryptedGender(),
                     memberProfile.getAge(),
                     location,
-                    memberProfile.getHeight(),
-                    memberProfile.getBody_type(),
-                    memberProfile.getJob(),
+                    memberProfile.getDecryptedHeight(),
+                    memberProfile.getDecryptedBodyType(),
+                    memberProfile.getDecryptedJob(),
                     images
             );
         }
@@ -107,13 +107,13 @@ public record MatchingResultResponse(
             
             return new MemberProfileDto(
                     memberProfile.getId(),
-                    memberProfile.getNickname(),
-                    memberProfile.getGender(),
+                    memberProfile.getDecryptedNickname(),
+                    memberProfile.getDecryptedGender(),
                     memberProfile.getAge(),
                     location,
-                    memberProfile.getHeight(),
-                    memberProfile.getBody_type(),
-                    memberProfile.getJob(),
+                    memberProfile.getDecryptedHeight(),
+                    memberProfile.getDecryptedBodyType(),
+                    memberProfile.getDecryptedJob(),
                     images
             );
         }
