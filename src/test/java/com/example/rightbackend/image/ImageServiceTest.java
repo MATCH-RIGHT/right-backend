@@ -9,6 +9,8 @@ import com.example.rightbackend.image.controller.dto.S3File;
 import com.example.rightbackend.image.controller.dto.response.ImageListResponse;
 import com.example.rightbackend.image.domain.MemberImage;
 import com.example.rightbackend.image.domain.repository.MemberImageRepository;
+import com.example.rightbackend.global.exception.RestApiException;
+import com.example.rightbackend.global.response.error.ImageError;
 import com.example.rightbackend.image.service.ImageService;
 import com.example.rightbackend.image.service.S3Uploader;
 import com.example.rightbackend.rekognition.controller.dto.response.FaceFeatureListResponse;
@@ -46,7 +48,10 @@ public class ImageServiceTest {
     
     @Mock
     private FaceFeatureRepository faceFeatureRepository;
-    
+
+    @Mock
+    private MemberImageRepository memberImageRepository;
+
     private Member testMember;
     private LoginMember loginMember;
     
@@ -181,5 +186,129 @@ public class ImageServiceTest {
         
         assertTrue(hasFeature1);
         assertTrue(hasFeature5);
+    }
+
+    @Test
+    @DisplayName("이미지 삭제 - imageId 사용")
+    void deleteImageByIdTest() {
+        // Given
+        MemberImage imageToDelete = MemberImage.of(
+                "test-image-1.jpg",
+                "http://example.com/test-image-1.jpg"
+        );
+        imageToDelete.setId(1L);
+        imageToDelete.setImageIndex(1);
+        imageToDelete.setMember(testMember);
+
+        when(memberRepository.findById(testMember.getId())).thenReturn(Optional.of(testMember));
+        when(memberImageRepository.findById(1L)).thenReturn(Optional.of(imageToDelete));
+        when(memberRepository.save(any(Member.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // When & Then
+        assertDoesNotThrow(() -> imageService.deleteImage(loginMember, 1L));
+    }
+
+    @Test
+    @DisplayName("이미지 삭제 - 권한 없는 이미지 접근 시 예외 발생")
+    void deleteImageUnauthorizedTest() {
+        // Given
+        EncodeMember otherEncodeMember = new EncodeMember(
+                "다른 사용자",
+                "other-provider-id",
+                "other-password",
+                "010-9999-9999"
+        );
+        Member otherMember = Member.of(otherEncodeMember);
+        otherMember.setId(2L);
+
+        MemberImage imageToDelete = MemberImage.of(
+                "test-image-1.jpg",
+                "http://example.com/test-image-1.jpg"
+        );
+        imageToDelete.setId(1L);
+        imageToDelete.setMember(otherMember);
+
+        when(memberRepository.findById(testMember.getId())).thenReturn(Optional.of(testMember));
+        when(memberImageRepository.findById(1L)).thenReturn(Optional.of(imageToDelete));
+
+        // When & Then
+        RestApiException exception = assertThrows(RestApiException.class,
+                () -> imageService.deleteImage(loginMember, 1L));
+
+        assertEquals(ImageError.UNAUTHORIZED_IMAGE_ACCESS.getMessage(),
+                exception.getErrorCode().getMessage());
+    }
+
+    @Test
+    @DisplayName("이미지 순서 변경 테스트")
+    void reorderImagesTest() {
+        // Given
+        List<MemberImage> memberImages = new ArrayList<>();
+        for (int i = 1; i <= 3; i++) {
+            MemberImage image = MemberImage.of(
+                    "test-image-" + i + ".jpg",
+                    "http://example.com/test-image-" + i + ".jpg"
+            );
+            image.setId((long) i);
+            image.setImageIndex(i);
+            image.setMember(testMember);
+            memberImages.add(image);
+        }
+        testMember.setMemberImage(memberImages);
+
+        when(memberRepository.findById(testMember.getId())).thenReturn(Optional.of(testMember));
+        when(memberRepository.save(any(Member.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // 순서를 3, 1, 2로 변경
+        List<Long> newOrder = List.of(3L, 1L, 2L);
+
+        // When
+        List<ImageListResponse> result = imageService.reorderImages(loginMember, newOrder);
+
+        // Then
+        assertNotNull(result);
+        assertEquals(3, result.size());
+
+        // 첫 번째 이미지가 id=3인지 확인
+        assertEquals(3L, result.get(0).id());
+        assertEquals(1, result.get(0).imageIndex());
+
+        // 두 번째 이미지가 id=1인지 확인
+        assertEquals(1L, result.get(1).id());
+        assertEquals(2, result.get(1).imageIndex());
+
+        // 세 번째 이미지가 id=2인지 확인
+        assertEquals(2L, result.get(2).id());
+        assertEquals(3, result.get(2).imageIndex());
+    }
+
+    @Test
+    @DisplayName("이미지 순서 변경 - 잘못된 이미지 ID 리스트")
+    void reorderImagesInvalidTest() {
+        // Given
+        List<MemberImage> memberImages = new ArrayList<>();
+        for (int i = 1; i <= 3; i++) {
+            MemberImage image = MemberImage.of(
+                    "test-image-" + i + ".jpg",
+                    "http://example.com/test-image-" + i + ".jpg"
+            );
+            image.setId((long) i);
+            image.setImageIndex(i);
+            image.setMember(testMember);
+            memberImages.add(image);
+        }
+        testMember.setMemberImage(memberImages);
+
+        when(memberRepository.findById(testMember.getId())).thenReturn(Optional.of(testMember));
+
+        // 잘못된 ID 포함 (ID 4는 존재하지 않음)
+        List<Long> invalidOrder = List.of(1L, 2L, 4L);
+
+        // When & Then
+        RestApiException exception = assertThrows(RestApiException.class,
+                () -> imageService.reorderImages(loginMember, invalidOrder));
+
+        assertEquals(ImageError.INVALID_IMAGE_ORDER.getMessage(),
+                exception.getErrorCode().getMessage());
     }
 }

@@ -6,11 +6,11 @@ public record UpdateProfileRequest(
     String nickname,
     String gender,
     String birthday,
-    String locationName,
-    String height,
-    String body_type,
-    String job,
-    List<String> interests,
-    String myself
+    Integer location,
+    Integer height,
+    Integer bodyType,
+    Integer job,
+    List<Long> interests,
+    String introduction
 ) {
 }

@@ -91,17 +91,28 @@ public class ImageService {
     }
 
     @Transactional
-    public void deleteImage(final LoginMember loginMember, final String fileName) {
-        MemberImage image = memberImageRepository.findByName(fileName)
+    public void deleteImage(final LoginMember loginMember, final Long imageId) {
+        MemberImage image = memberImageRepository.findById(imageId)
                 .orElseThrow(() -> new RestApiException(ImageError.IMAGE_NOT_FOUND));
-        
+
         Member member = getMember(loginMember);
         if (!image.getMember().getId().equals(member.getId())) {
             throw new RestApiException(ImageError.UNAUTHORIZED_IMAGE_ACCESS);
         }
-        
+
+        int deletedIndex = image.getImageIndex();
         s3Uploader.delete(image.getName());
         memberImageRepository.delete(image);
+
+        // 삭제된 이미지 이후의 인덱스 재정렬
+        List<MemberImage> remainingImages = member.getMemberImage().stream()
+                .filter(img -> img.getImageIndex() > deletedIndex)
+                .toList();
+
+        for (MemberImage img : remainingImages) {
+            img.setImageIndex(img.getImageIndex() - 1);
+        }
+        memberRepository.save(member);
     }
 
     @Transactional(readOnly = true)
@@ -128,6 +139,43 @@ public class ImageService {
         
         List<MemberImage> memberImages = member.getMemberImage();
         return memberImages.stream()
+                .map(image -> new ImageListResponse(
+                        image.getId(),
+                        image.getName(),
+                        image.getUrl(),
+                        image.getImageIndex()))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<ImageListResponse> reorderImages(final LoginMember loginMember, final List<Long> imageIds) {
+        Member member = getMember(loginMember);
+        List<MemberImage> memberImages = member.getMemberImage();
+
+        // 모든 이미지 ID가 멤버의 이미지인지 확인
+        List<Long> memberImageIds = memberImages.stream()
+                .map(MemberImage::getId)
+                .collect(Collectors.toList());
+
+        if (!memberImageIds.containsAll(imageIds) || imageIds.size() != memberImageIds.size()) {
+            throw new RestApiException(ImageError.INVALID_IMAGE_ORDER);
+        }
+
+        // 새로운 순서로 인덱스 업데이트
+        for (int i = 0; i < imageIds.size(); i++) {
+            Long imageId = imageIds.get(i);
+            MemberImage image = memberImages.stream()
+                    .filter(img -> img.getId().equals(imageId))
+                    .findFirst()
+                    .orElseThrow(() -> new RestApiException(ImageError.IMAGE_NOT_FOUND));
+            image.setImageIndex(i + 1);
+        }
+
+        memberRepository.save(member);
+
+        // 업데이트된 이미지 목록 반환
+        return member.getMemberImage().stream()
+                .sorted((a, b) -> Integer.compare(a.getImageIndex(), b.getImageIndex()))
                 .map(image -> new ImageListResponse(
                         image.getId(),
                         image.getName(),

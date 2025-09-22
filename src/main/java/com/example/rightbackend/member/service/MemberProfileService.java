@@ -21,6 +21,9 @@ import com.example.rightbackend.member.domain.MemberProfileToInterest;
 import com.example.rightbackend.member.domain.repository.InterestRepository;
 import com.example.rightbackend.member.domain.repository.LocationRepository;
 import com.example.rightbackend.member.domain.repository.MemberProfileRepository;
+import com.example.rightbackend.member.domain.constant.Gender;
+import com.example.rightbackend.member.domain.constant.BodyType;
+import com.example.rightbackend.member.domain.constant.Job;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,9 +61,9 @@ public class MemberProfileService {
 
         addInterestsToMemberProfile(memberProfile, request.interests());
         
-        if (request.locationName() != null && !request.locationName().isEmpty()) {
-            Location location = locationRepository.findByName(request.locationName())
-                .orElseGet(() -> locationRepository.save(Location.of(request.locationName())));
+        if (request.location() != null) {
+            Location location = locationRepository.findById(request.location().longValue())
+                .orElseThrow(() -> new RestApiException(MemberError.INVALID_LOCATION_ID));
             memberProfile.addLocation(location);
         }
 
@@ -71,12 +74,13 @@ public class MemberProfileService {
         return MemberResponse.SIGN_UP_SUCCESS.getMessage();
     }
 
-    private void addInterestsToMemberProfile(MemberProfile memberProfile, List<String> interests) {
-        if(interests == null || interests.isEmpty()) {
+    private void addInterestsToMemberProfile(MemberProfile memberProfile, List<Long> interestIds) {
+        if(interestIds == null || interestIds.isEmpty()) {
             return;
         }
-        for(String interestName: interests) {
-            Interest interest = interestRepository.findByName(interestName).orElseGet(() -> interestRepository.save(Interest.of(interestName)));
+        for(Long interestId: interestIds) {
+            Interest interest = interestRepository.findById(interestId)
+                .orElseThrow(() -> new RestApiException(MemberError.INVALID_INTEREST_ID));
             MemberProfileToInterest link = MemberProfileToInterest.of(memberProfile, interest);
             memberProfile.getMemberProfileToInterests().add(link);
         }
@@ -100,15 +104,19 @@ public class MemberProfileService {
     }
 
     private EncodeMemberProfile encodeForMemberProfile(final SignUpRequest request) {
+        String genderStr = request.gender() != null ? Gender.fromName(request.gender()).name() : null;
+        String bodyTypeStr = request.bodyType() != null ? BodyType.fromId(request.bodyType()).name() : null;
+        String jobStr = request.job() != null ? Job.fromId(request.job()).name() : null;
+
         return new EncodeMemberProfile(TextEncoder.encrypt(request.nickname()),
-                TextEncoder.encrypt(request.gender()),
+                genderStr != null ? TextEncoder.encrypt(genderStr) : null,
                 TextEncoder.encrypt(request.birthday()),
-                TextEncoder.encrypt(request.height()),
-                TextEncoder.encrypt(request.body_type()),
-                TextEncoder.encrypt(request.job()),
+                request.height(),
+                bodyTypeStr != null ? TextEncoder.encrypt(bodyTypeStr) : null,
+                jobStr != null ? TextEncoder.encrypt(jobStr) : null,
                 request.interests(),
-                TextEncoder.encrypt(request.myself()),
-                TextEncoder.encrypt(request.gender()));
+                TextEncoder.encrypt(request.introduction()),
+                "0");
     }
 
     @Transactional(readOnly = true)
@@ -170,22 +178,31 @@ public class MemberProfileService {
         MemberProfile memberProfile = member.getMemberProfile();
         
         if (request.nickname() != null) memberProfile.setNickname(TextEncoder.encrypt(request.nickname()));
-        if (request.gender() != null) memberProfile.setGender(TextEncoder.encrypt(request.gender()));
+        if (request.gender() != null) {
+            String genderStr = Gender.fromName(request.gender()).name();
+            memberProfile.setGender(TextEncoder.encrypt(genderStr));
+        }
         if (request.birthday() != null) memberProfile.setBirthday(TextEncoder.encrypt(request.birthday()));
-        if (request.height() != null) memberProfile.setHeight(TextEncoder.encrypt(request.height()));
-        if (request.body_type() != null) memberProfile.setBody_type(TextEncoder.encrypt(request.body_type()));
-        if (request.job() != null) memberProfile.setJob(TextEncoder.encrypt(request.job()));
-        if (request.myself() != null) memberProfile.setMyself(TextEncoder.encrypt(request.myself()));
+        if (request.height() != null) memberProfile.setHeight(request.height());
+        if (request.bodyType() != null) {
+            String bodyTypeStr = BodyType.fromId(request.bodyType()).name();
+            memberProfile.setBodyType(TextEncoder.encrypt(bodyTypeStr));
+        }
+        if (request.job() != null) {
+            String jobStr = Job.fromId(request.job()).name();
+            memberProfile.setJob(TextEncoder.encrypt(jobStr));
+        }
+        if (request.introduction() != null) memberProfile.setIntroduction(TextEncoder.encrypt(request.introduction()));
         
         if (request.interests() != null) {
             memberProfile.getMemberProfileToInterests().clear();
             addInterestsToMemberProfile(memberProfile, request.interests());
         }
         
-        if (request.locationName() != null) {
+        if (request.location() != null) {
             memberProfile.getMemberProfileToLocations().clear();
-            Location location = locationRepository.findByName(request.locationName())
-                .orElseGet(() -> locationRepository.save(Location.of(request.locationName())));
+            Location location = locationRepository.findById(request.location().longValue())
+                .orElseThrow(() -> new RestApiException(MemberError.INVALID_LOCATION_ID));
             memberProfile.addLocation(location);
         }
         
@@ -200,7 +217,10 @@ public class MemberProfileService {
         validatePassword(request.password());
         validatePhoneNumber(request.phoneNumber());
         validateNickname(request.nickname());
-        if (request.height() != null && !request.height().trim().isEmpty()) {
+        validateGender(request.gender());
+        validateBodyType(request.bodyType());
+        validateJob(request.job());
+        if (request.height() != null) {
             validateHeight(request.height());
         }
         if (request.birthday() != null && !request.birthday().trim().isEmpty()) {
@@ -256,13 +276,8 @@ public class MemberProfileService {
         }
     }
 
-    private void validateHeight(final String height) {
-        try {
-            int heightValue = Integer.parseInt(height);
-            if (heightValue < 120 || heightValue > 200) {
-                throw new RestApiException(MemberError.INVALID_HEIGHT_FORMAT);
-            }
-        } catch (NumberFormatException e) {
+    private void validateHeight(final Integer height) {
+        if (height < 120 || height > 250) {
             throw new RestApiException(MemberError.INVALID_HEIGHT_FORMAT);
         }
     }
@@ -270,6 +285,36 @@ public class MemberProfileService {
     private void validateBirthday(final String birthday) {
         if (!birthday.matches("^\\d{4}-\\d{2}-\\d{2}$")) {
             throw new RestApiException(MemberError.INVALID_BIRTHDAY_FORMAT);
+        }
+    }
+
+    private void validateGender(final String gender) {
+        if (gender != null && !gender.trim().isEmpty()) {
+            try {
+                Gender.fromName(gender);
+            } catch (IllegalArgumentException e) {
+                throw new RestApiException(MemberError.INVALID_GENDER);
+            }
+        }
+    }
+
+    private void validateBodyType(final Integer bodyType) {
+        if (bodyType != null) {
+            try {
+                BodyType.fromId(bodyType);
+            } catch (IllegalArgumentException e) {
+                throw new RestApiException(MemberError.INVALID_BODY_TYPE);
+            }
+        }
+    }
+
+    private void validateJob(final Integer job) {
+        if (job != null) {
+            try {
+                Job.fromId(job);
+            } catch (IllegalArgumentException e) {
+                throw new RestApiException(MemberError.INVALID_JOB);
+            }
         }
     }
 }

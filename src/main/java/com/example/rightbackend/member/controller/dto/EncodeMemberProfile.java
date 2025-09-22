@@ -5,10 +5,10 @@ import java.util.List;
 public record EncodeMemberProfile(String nickname,
                                   String gender,
                                   String birthday,
-                                  String height,
-                                  String body_type,
+                                  Integer height,
+                                  String bodyType,
                                   String job,
-                                  List<String> interests,
-                                  String myself,
+                                  List<Long> interests,
+                                  String introduction,
                                   String money) {
 }

@@ -2,6 +2,7 @@ package com.example.rightbackend.docs;
 
 import com.example.rightbackend.global.response.SuccessResponse;
 import com.example.rightbackend.global.response.success.ImageSuccess;
+import com.example.rightbackend.image.controller.dto.request.ImageReorderRequest;
 import com.example.rightbackend.image.controller.dto.response.ImageListResponse;
 import com.example.rightbackend.image.controller.dto.response.ImageResponse;
 import com.example.rightbackend.rekognition.controller.dto.response.FaceFeatureListResponse;
@@ -62,13 +63,13 @@ public class ImageDocs extends BaseRestDocsTest {
     @Test
     @DisplayName("API - 이미지 삭제")
     void deleteImage() throws Exception {
-        final String fileName = "test.jpg";
+        final Long imageId = 1L;
 
         SuccessResponse response = SuccessResponse.of(ImageSuccess.IMAGE_DELETE_SUCCESS);
 
         doReturn(response).when(imageController).deleteImage(any(), any());
 
-        this.mockMvc.perform(delete("/api/image/delete/{fileName}", fileName)
+        this.mockMvc.perform(delete("/api/image/delete/{imageId}", imageId)
                         .header("Authorization", GIVEN_ACCESS_TOKEN))
                 .andExpect(status().isOk())
                 .andDo(document("image-delete",
@@ -76,7 +77,7 @@ public class ImageDocs extends BaseRestDocsTest {
                                 headerWithName("Authorization").description("액세스 토큰")
                         ),
                         pathParameters(
-                                parameterWithName("fileName").description("삭제할 이미지 파일명")
+                                parameterWithName("imageId").description("삭제할 이미지 ID")
                         ),
                         responseFields(
                                 fieldWithPath("code").description("성공 코드"),
@@ -86,37 +87,41 @@ public class ImageDocs extends BaseRestDocsTest {
     }
 
     @Test
-    @DisplayName("API - 이미지 변경")
-    void updateImage() throws Exception {
-        final String fileName = "old.jpg";
+    @DisplayName("API - 이미지 순서 변경")
+    void reorderImages() throws Exception {
+        // 요청 데이터 생성
+        ImageReorderRequest request = new ImageReorderRequest(List.of(3L, 1L, 2L));
 
-        MockMultipartFile mockImage = createNewMultipartFile();
+        // 응답 데이터 생성
+        List<ImageListResponse> reorderedList = new ArrayList<>();
+        reorderedList.add(new ImageListResponse(3L, "image3.jpg", "http://example.com/image3.jpg", 1));
+        reorderedList.add(new ImageListResponse(1L, "image1.jpg", "http://example.com/image1.jpg", 2));
+        reorderedList.add(new ImageListResponse(2L, "image2.jpg", "http://example.com/image2.jpg", 3));
 
-        SuccessResponse response = SuccessResponse.of(ImageSuccess.IMAGE_CHANGE_SUCCESS);
+        SuccessResponse<List<ImageListResponse>> response =
+                SuccessResponse.of(ImageSuccess.IMAGE_REORDER_SUCCESS, reorderedList);
 
-        doReturn(response).when(imageController).updateImage(any(), any(), any());
+        doReturn(response).when(imageController).reorderImages(any(), any());
 
-        this.mockMvc.perform(multipart("/api/image/change/{fileName}", fileName)
-                        .file(mockImage)
+        this.mockMvc.perform(put("/api/image/reorder")
                         .header("Authorization", GIVEN_ACCESS_TOKEN)
-                        .with(request -> {
-                            request.setMethod("PUT");
-                            return request;
-                        }))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andDo(document("image-update",
+                .andDo(document("image-reorder",
                         requestHeaders(
                                 headerWithName("Authorization").description("액세스 토큰")
                         ),
-                        pathParameters(
-                                parameterWithName("fileName").description("변경할 이미지의 현재 파일명")
-                        ),
-                        requestParts(
-                                partWithName("newImage").description("새로 업로드할 이미지 파일")
+                        requestFields(
+                                fieldWithPath("imageIds").description("새로운 순서대로 정렬된 이미지 ID 배열")
                         ),
                         responseFields(
                                 fieldWithPath("code").description("성공 코드"),
-                                fieldWithPath("result").description("이미지 변경 결과")
+                                fieldWithPath("result").description("재정렬된 이미지 목록"),
+                                fieldWithPath("result[].id").description("이미지 ID"),
+                                fieldWithPath("result[].fileName").description("파일명"),
+                                fieldWithPath("result[].fileUrl").description("파일 URL"),
+                                fieldWithPath("result[].imageIndex").description("새로운 이미지 인덱스")
                         )
                 ));
     }
@@ -272,13 +277,6 @@ public class ImageDocs extends BaseRestDocsTest {
                 "test data".getBytes());
     }
 
-    private MockMultipartFile createNewMultipartFile() {
-        return new MockMultipartFile("newImage",
-                "profile-data.png",
-                "image/png",
-                "test data".getBytes());
-    }
-    
     private java.util.Map<String, Object> createFeatureMap(Long id, String name) {
         java.util.Map<String, Object> featureMap = new java.util.HashMap<>();
         featureMap.put("id", id);

@@ -5,9 +5,9 @@ import java.util.List;
 
 public record EncodeMemberPage (String nickname,
                                 String locationName,
-                                String height,
-                                String body_type,
+                                Integer height,
+                                String bodyType,
                                 String job,
                                 List<InterestDto> interests,
-                                String myself){
+                                String introduction){
 }

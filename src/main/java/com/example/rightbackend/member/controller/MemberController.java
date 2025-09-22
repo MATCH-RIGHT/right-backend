@@ -15,6 +15,7 @@ import com.example.rightbackend.member.domain.Interest;
 import com.example.rightbackend.member.domain.Location;
 import com.example.rightbackend.member.controller.dto.request.UpdateProfileRequest;
 import com.example.rightbackend.member.service.MemberProfileService;
+import com.example.rightbackend.member.controller.dto.response.ConstantsResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -71,5 +72,10 @@ public class MemberController {
     @PutMapping("/update-profile")
     public ResponseEntity<SuccessResponse<String>> updateProfile(@Login LoginMember loginMember, @RequestBody UpdateProfileRequest request) {
         return SuccessResponse.of(MemberSuccess.UPDATE_PROFILE_SUCCESS, memberProfileService.updateProfile(loginMember, request));
+    }
+
+    @GetMapping("/constants")
+    public ResponseEntity<SuccessResponse<ConstantsResponse>> getConstants() {
+        return SuccessResponse.of(MemberSuccess.GET_CONSTANTS_SUCCESS, ConstantsResponse.create());
     }
 }

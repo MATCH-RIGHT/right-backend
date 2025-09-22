@@ -265,7 +265,7 @@ public class MatchingDocs extends BaseRestDocsTest {
         images1.add(new ImageListResponse(2L, "image2.jpg", "https://right-bucket.s3.ap-northeast-2.amazonaws.com/profile-images/image2.jpg", 2));
         
         MatchingResultResponse.MemberProfileDto profile1 = new MatchingResultResponse.MemberProfileDto(
-                2L, "사용자1", "여성", 28, "서울", "165cm", "보통", "개발자", images1
+                2L, "사용자1", "여성", 28, "서울", 165, "보통", "개발자", images1
         );
         
         responses.add(new MatchingResultResponse(
@@ -278,7 +278,7 @@ public class MatchingDocs extends BaseRestDocsTest {
         images2.add(new ImageListResponse(3L, "image3.jpg", "https://right-bucket.s3.ap-northeast-2.amazonaws.com/profile-images/image3.jpg", 1));
         
         MatchingResultResponse.MemberProfileDto profile2 = new MatchingResultResponse.MemberProfileDto(
-                3L, "사용자2", "여성", 25, "부산", "170cm", "슬림", "디자이너", images2
+                3L, "사용자2", "여성", 25, "부산", 170, "슬림", "디자이너", images2
         );
         
         responses.add(new MatchingResultResponse(
@@ -298,7 +298,7 @@ public class MatchingDocs extends BaseRestDocsTest {
         images.add(new ImageListResponse(2L, "image2.jpg", "https://right-bucket.s3.ap-northeast-2.amazonaws.com/profile-images/image2.jpg", 2));
         
         MatchedResponse.MemberProfileDto profile1 = new MatchedResponse.MemberProfileDto(
-                2L, "매칭1", "여성", 28, "서울", "165cm", "보통", "개발자", images
+                2L, "매칭1", "여성", 28, "서울", 165, "보통", "개발자", images
         );
         
         responses.add(new MatchedResponse(

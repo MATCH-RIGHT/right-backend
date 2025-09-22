@@ -9,10 +9,10 @@ public record SignUpRequest (String name,
                              String nickname,
                              String gender,
                              String birthday,
-                             String locationName,
-                             String height,
-                             String body_type,
-                             String job,
-                             List<String> interests,
-                             String myself){
+                             Integer location,
+                             Integer height,
+                             Integer bodyType,
+                             Integer job,
+                             List<Long> interests,
+                             String introduction){
 }

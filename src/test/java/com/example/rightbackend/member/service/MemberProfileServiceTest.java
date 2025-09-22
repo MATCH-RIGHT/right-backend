@@ -180,20 +180,20 @@ public class MemberProfileServiceTest extends BaseIntegrationTest {
         LoginMember loginMember = new LoginMember(member.getId(), member.getRole());
         
         String newNickname = "새로운 닉네임";
-        String newLocationName = "부산";
-        List<String> newInterests = List.of("독서", "여행", "게임");
-        String newMyself = "새로운 자기소개";
+        Integer newLocation = 1;
+        List<Long> newInterests = List.of(1L, 2L, 3L);
+        String newIntroduction = "새로운 자기소개";
         
         UpdateProfileRequest request = new UpdateProfileRequest(
                 newNickname,
                 null,
                 null,
-                newLocationName,
+                newLocation,
                 null,
                 null,
                 null,
                 newInterests,
-                newMyself
+                newIntroduction
         );
         
         // When
@@ -204,19 +204,19 @@ public class MemberProfileServiceTest extends BaseIntegrationTest {
         
         Member updatedMember = memberRepository.findById(member.getId()).orElseThrow();
         Assertions.assertEquals(TextEncoder.encrypt(newNickname), updatedMember.getMemberProfile().getNickname());
-        Assertions.assertEquals(TextEncoder.encrypt(newMyself), updatedMember.getMemberProfile().getMyself());
+        Assertions.assertEquals(TextEncoder.encrypt(newIntroduction), updatedMember.getMemberProfile().getIntroduction());
         
-        List<String> updatedInterests = updatedMember.getMemberProfile().getMemberProfileToInterests().stream()
-                .map(link -> link.getInterest().getName())
+        List<Long> updatedInterests = updatedMember.getMemberProfile().getMemberProfileToInterests().stream()
+                .map(link -> link.getInterest().getId())
                 .toList();
         Assertions.assertEquals(newInterests.size(), updatedInterests.size());
         Assertions.assertTrue(updatedInterests.containsAll(newInterests));
         
-        String updatedLocation = null;
+        // Location 검증 - 테스트용 Location 생성
         if (!updatedMember.getMemberProfile().getMemberProfileToLocations().isEmpty()) {
-            updatedLocation = updatedMember.getMemberProfile().getMemberProfileToLocations().get(0).getLocation().getName();
+            Long updatedLocationId = updatedMember.getMemberProfile().getMemberProfileToLocations().get(0).getLocation().getId();
+            Assertions.assertEquals(newLocation.longValue(), updatedLocationId);
         }
-        Assertions.assertEquals(newLocationName, updatedLocation);
     }
 
     private SignUpRequest createSignUpRequest() {
@@ -228,12 +228,12 @@ public class MemberProfileServiceTest extends BaseIntegrationTest {
                 DummyGenerator.GIVEN_NICKNAME,
                 DummyGenerator.GIVEN_GENDER,
                 DummyGenerator.GIVEN_BIRTHDAY,
-                DummyGenerator.GIVEN_LOCATION_NAME,
+                1,  // location ID
                 DummyGenerator.GIVEN_HEIGHT,
-                DummyGenerator.GIVEN_BODY_TYPE,
-                DummyGenerator.GIVEN_JOB,
+                1,  // bodyType ID
+                1,  // job ID
                 DummyGenerator.GIVEN_INTERESTS,
-                DummyGenerator.GIVEN_MYSELF);
+                DummyGenerator.GIVEN_INTRODUCTION);
         return signUpRequest;
     }
 }

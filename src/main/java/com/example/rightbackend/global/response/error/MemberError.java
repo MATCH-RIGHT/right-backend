@@ -18,8 +18,13 @@ public enum MemberError implements ErrorCode {
     INVALID_NAME_FORMAT(HttpStatus.BAD_REQUEST, "M12", "이름을 입력해주세요"),
     INVALID_NICKNAME_FORMAT(HttpStatus.BAD_REQUEST, "M13", "닉네임을 입력해주세요"),
     INVALID_PROVIDER_ID_FORMAT(HttpStatus.BAD_REQUEST, "M14", "아이디는 3-20자의 영문/숫자만 입력 가능합니다"),
-    INVALID_HEIGHT_FORMAT(HttpStatus.BAD_REQUEST, "M15", "신장은 120-200cm 범위로 입력해주세요"),
-    INVALID_BIRTHDAY_FORMAT(HttpStatus.BAD_REQUEST, "M16", "생년월일을 올바른 형식(YYYY-MM-DD)으로 입력해주세요");
+    INVALID_HEIGHT_FORMAT(HttpStatus.BAD_REQUEST, "M15", "신장은 120-250cm 범위로 입력해주세요"),
+    INVALID_BIRTHDAY_FORMAT(HttpStatus.BAD_REQUEST, "M16", "생년월일을 올바른 형식(YYYY-MM-DD)으로 입력해주세요"),
+    INVALID_GENDER(HttpStatus.BAD_REQUEST, "M17", "유효하지 않은 성별입니다"),
+    INVALID_BODY_TYPE(HttpStatus.BAD_REQUEST, "M18", "유효하지 않은 체형입니다"),
+    INVALID_JOB(HttpStatus.BAD_REQUEST, "M19", "유효하지 않은 직업입니다"),
+    INVALID_LOCATION_ID(HttpStatus.BAD_REQUEST, "M20", "유효하지 않은 지역 ID입니다"),
+    INVALID_INTEREST_ID(HttpStatus.BAD_REQUEST, "M21", "유효하지 않은 관심사 ID입니다");
 
 
     private final HttpStatus httpStatus;

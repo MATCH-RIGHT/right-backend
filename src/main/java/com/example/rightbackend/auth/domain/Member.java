@@ -63,14 +63,13 @@ public class Member {
                 TextEncoder.decrypt(encodeMemberPage.nickname()) : "";
         String locationName = encodeMemberPage.locationName() != null ? 
                 TextEncoder.decrypt(encodeMemberPage.locationName()) : "";
-        String height = encodeMemberPage.height() != null ?
-                TextEncoder.decrypt(encodeMemberPage.height()) : "";
-        String bodyType = encodeMemberPage.body_type() != null ?
-                TextEncoder.decrypt(encodeMemberPage.body_type()) : "";
+        Integer height = encodeMemberPage.height();
+        String bodyType = encodeMemberPage.bodyType() != null ?
+                TextEncoder.decrypt(encodeMemberPage.bodyType()) : "";
         String job = encodeMemberPage.job() != null ?
                 TextEncoder.decrypt(encodeMemberPage.job()) : "";
-        String myself = encodeMemberPage.myself() != null ?
-                TextEncoder.decrypt(encodeMemberPage.myself()) : "";
+        String introduction = encodeMemberPage.introduction() != null ?
+                TextEncoder.decrypt(encodeMemberPage.introduction()) : "";
                 
         return new MemberPageResponse(name,
                 nickname,
@@ -79,7 +78,7 @@ public class Member {
                 bodyType,
                 job,
                 encodeMemberPage.interests(),
-                myself);
+                introduction);
     }
 
     protected Member () {

@@ -13,7 +13,8 @@ public enum ImageError implements ErrorCode {
     EMPTY_FILE(HttpStatus.BAD_REQUEST, "I007", "빈 파일은 업로드할 수 없습니다"),
     INVALID_FILE_NAME(HttpStatus.BAD_REQUEST, "I008", "올바르지 않은 파일명입니다"),
     LIMIT_IMAGE_COUNT_ERROR(HttpStatus.BAD_REQUEST, "I009", "한 번에 최대 5개의 이미지만 업로드 가능합니다"),
-    UNAUTHORIZED_IMAGE_ACCESS(HttpStatus.FORBIDDEN, "I010", "다른 사용자의 이미지에 접근할 수 없습니다")
+    UNAUTHORIZED_IMAGE_ACCESS(HttpStatus.FORBIDDEN, "I010", "다른 사용자의 이미지에 접근할 수 없습니다"),
+    INVALID_IMAGE_ORDER(HttpStatus.BAD_REQUEST, "I011", "잘못된 이미지 순서 요청입니다")
     ;
 
     private final HttpStatus httpStatus;

@@ -74,7 +74,7 @@ public record MatchingResultResponse(
             String gender,
             Integer age,
             String location,
-            String height,
+            Integer height,
             String bodyType,
             String job,
             List<ImageListResponse> images

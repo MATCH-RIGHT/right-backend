@@ -5,11 +5,11 @@ import java.util.List;
 public record MemberPageResponse (String name,
                                   String nickname,
                                   String address,
-                                  String height,
-                                  String body_type,
+                                  Integer height,
+                                  String bodyType,
                                   String job,
                                   List<InterestDto> interests,
-                                  String myself){
+                                  String introduction){
     
     public record InterestDto(Long id, String name) {}
 }

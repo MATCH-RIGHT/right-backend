@@ -13,6 +13,7 @@ public enum MemberSuccess implements SuccessCode {
     GET_INTERESTS_SUCCESS(HttpStatus.OK, "M007", "관심사 목록 조회를 완료했습니다"),
     GET_LOCATIONS_SUCCESS(HttpStatus.OK, "M008", "지역 목록 조회를 완료했습니다"),
     UPDATE_PROFILE_SUCCESS(HttpStatus.OK, "M009", "회원 정보 수정을 완료했습니다"),
+    GET_CONSTANTS_SUCCESS(HttpStatus.OK, "M010", "상수 목록 조회를 완료했습니다"),
     ;
 
     private final HttpStatus httpStatus;

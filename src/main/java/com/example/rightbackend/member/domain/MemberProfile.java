@@ -39,10 +39,10 @@ public class MemberProfile implements Persistable<Long> {
     private String birthday;
 
     @Column
-    private String height;
+    private Integer height;
 
     @Column
-    private String body_type;
+    private String bodyType;
 
     @Column
     private String job;
@@ -51,7 +51,7 @@ public class MemberProfile implements Persistable<Long> {
     private String money = "0";
 
     @Column
-    private String myself;
+    private String introduction;
 
     @OneToMany(mappedBy = "memberProfile", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberProfileToLocation> memberProfileToLocations = new ArrayList<>();
@@ -79,9 +79,9 @@ public class MemberProfile implements Persistable<Long> {
         memberProfile.gender = request.gender();
         memberProfile.birthday = request.birthday();
         memberProfile.height = request.height();
-        memberProfile.body_type = request.body_type();
+        memberProfile.bodyType = request.bodyType();
         memberProfile.job = request.job();
-        memberProfile.myself = request.myself();
+        memberProfile.introduction = request.introduction();
         memberProfile.member = member;
         return memberProfile;
     }
@@ -96,7 +96,7 @@ public class MemberProfile implements Persistable<Long> {
             locationName = memberProfileToLocations.get(0).getLocation().getName();
         }
         
-        return new EncodeMemberPage(nickname, locationName, height, body_type, job, interests, myself);
+        return new EncodeMemberPage(nickname, locationName, height, bodyType, job, interests, introduction);
     }
 
     public void addInterest(Interest interest) {
@@ -165,20 +165,20 @@ public class MemberProfile implements Persistable<Long> {
         return birthday != null ? TextEncoder.decrypt(birthday) : "";
     }
     
-    public String getDecryptedHeight() {
-        return height != null ? TextEncoder.decrypt(height) : "";
+    public Integer getDecryptedHeight() {
+        return height;
     }
     
     public String getDecryptedBodyType() {
-        return body_type != null ? TextEncoder.decrypt(body_type) : "";
+        return bodyType != null ? TextEncoder.decrypt(bodyType) : "";
     }
     
     public String getDecryptedJob() {
         return job != null ? TextEncoder.decrypt(job) : "";
     }
     
-    public String getDecryptedMyself() {
-        return myself != null ? TextEncoder.decrypt(myself) : "";
+    public String getDecryptedIntroduction() {
+        return introduction != null ? TextEncoder.decrypt(introduction) : "";
     }
     
     public String getLocationPartition() {

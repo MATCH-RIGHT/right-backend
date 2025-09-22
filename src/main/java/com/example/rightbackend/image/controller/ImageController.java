@@ -4,6 +4,7 @@ import com.example.rightbackend.auth.controller.dto.LoginMember;
 import com.example.rightbackend.global.config.resolver.Login;
 import com.example.rightbackend.global.response.SuccessResponse;
 import com.example.rightbackend.global.response.success.ImageSuccess;
+import com.example.rightbackend.image.controller.dto.request.ImageReorderRequest;
 import com.example.rightbackend.image.controller.dto.response.ImageListResponse;
 import com.example.rightbackend.image.controller.dto.response.ImageResponse;
 import com.example.rightbackend.image.service.ImageService;
@@ -36,24 +37,23 @@ public class ImageController {
         return SuccessResponse.of(ImageSuccess.IMAGE_UPLOAD_SUCCESS);
     }
 
-    @DeleteMapping("/delete/{fileName}")
-    public ResponseEntity<SuccessResponse<ImageResponse>> deleteImage(@Login final LoginMember loginMember, @PathVariable String fileName) {
-        imageService.deleteImage(loginMember, fileName);
+    @DeleteMapping("/delete/{imageId}")
+    public ResponseEntity<SuccessResponse<ImageResponse>> deleteImage(@Login final LoginMember loginMember, @PathVariable Long imageId) {
+        imageService.deleteImage(loginMember, imageId);
         return SuccessResponse.of(ImageSuccess.IMAGE_DELETE_SUCCESS);
-    }
-
-    @PutMapping("/change/{fileName}")
-    public ResponseEntity<SuccessResponse<ImageResponse>> updateImage(@Login final LoginMember loginMember, @PathVariable String fileName, @RequestPart MultipartFile newImage) {
-        imageService.deleteImage(loginMember, fileName);
-        List<MultipartFile> image = List.of(newImage);
-        imageService.multiUpload(loginMember, image);
-        return SuccessResponse.of(ImageSuccess.IMAGE_CHANGE_SUCCESS);
     }
 
     @GetMapping("/get-profile-images")
     public ResponseEntity<SuccessResponse<List<ImageListResponse>>> getAllImages(@Login LoginMember loginMember) {
         List<ImageListResponse> imageList = imageService.getImageList(loginMember);
         return SuccessResponse.of(ImageSuccess.IMAGE_GET_SUCCESS, imageList);
+    }
+
+    @PutMapping("/reorder")
+    public ResponseEntity<SuccessResponse<List<ImageListResponse>>> reorderImages(@Login LoginMember loginMember,
+                                                                                  @RequestBody ImageReorderRequest request) {
+        List<ImageListResponse> imageList = imageService.reorderImages(loginMember, request.imageIds());
+        return SuccessResponse.of(ImageSuccess.IMAGE_REORDER_SUCCESS, imageList);
     }
 
     @GetMapping("/get-all-features")

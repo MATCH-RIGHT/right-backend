@@ -41,17 +41,17 @@ public class DummyGenerator {
     public static final String GIVEN_PASSWORD = "TestPass123!";
     public static final String GIVEN_PHONE_NUMBER = "010-1234-5678";
     public static final String GIVEN_NICKNAME = "tmpNicknmae";
-    public static final String GIVEN_GENDER = "0";
+    public static final String GIVEN_GENDER = "MALE";
     public static final String GIVEN_BIRTHDAY = "1999-01-01";
     public static final String GIVEN_LOCATION_NAME = "부산광역시 남구";
-    public static final String GIVEN_HEIGHT = "180";
+    public static final Integer GIVEN_HEIGHT = 180;
     public static final String GIVEN_BODY_TYPE = "slim";
     public static final String GIVEN_JOB = "student";
     public static final String GIVEN_MONEY = "0";
-    public static final String GIVEN_MYSELF = "hello world";
+    public static final String GIVEN_INTRODUCTION = "hello world";
     public static final String GIVEN_NOTIFICATION_CONTENT = "알림 내용입니다";
 
-    public static final List<String> GIVEN_INTERESTS = List.of("READING", "TRAVELING", "CODING");
+    public static final List<Long> GIVEN_INTERESTS = List.of(1L, 2L, 3L);
     @Autowired
     private TokenProvider tokenProvider;
     @Autowired
@@ -84,11 +84,11 @@ public class DummyGenerator {
                 TextEncoder.encrypt(GIVEN_NICKNAME),
                 TextEncoder.encrypt(GIVEN_GENDER),
                 TextEncoder.encrypt(GIVEN_BIRTHDAY),
-                TextEncoder.encrypt(GIVEN_HEIGHT),
+                GIVEN_HEIGHT,
                 TextEncoder.encrypt(GIVEN_BODY_TYPE),
                 TextEncoder.encrypt(GIVEN_JOB),
                 GIVEN_INTERESTS,
-                TextEncoder.encrypt(GIVEN_MYSELF),
+                TextEncoder.encrypt(GIVEN_INTRODUCTION),
                 TextEncoder.encrypt(GIVEN_MONEY));
 
         MemberProfile memberProfile = MemberProfile.of(encodeMemberProfile, member);
@@ -104,12 +104,18 @@ public class DummyGenerator {
         memberRepository.save(member);
     }
 
-    private void addInterestsToMemberProfile(MemberProfile memberProfile, List<String> interests) {
-        if(interests == null || interests.isEmpty()) {
+    private void addInterestsToMemberProfile(MemberProfile memberProfile, List<Long> interestIds) {
+        if(interestIds == null || interestIds.isEmpty()) {
             return;
         }
-        for(String interestName: interests) {
-            Interest interest = interestRepository.findByName(interestName).orElseGet(() -> interestRepository.save(Interest.of(interestName)));
+        // 테스트용 Interest 생성
+        for(Long id: interestIds) {
+            Interest interest = interestRepository.findById(id)
+                .orElseGet(() -> {
+                    Interest newInterest = Interest.of("Interest" + id);
+                    newInterest.setId(id);
+                    return interestRepository.save(newInterest);
+                });
             memberProfile.addInterest(interest);
         }
     }

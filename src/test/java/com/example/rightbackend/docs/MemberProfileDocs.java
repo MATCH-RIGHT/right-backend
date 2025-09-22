@@ -52,12 +52,12 @@ public class MemberProfileDocs extends BaseRestDocsTest {
                                 fieldWithPath("nickname").description("닉네임"),
                                 fieldWithPath("gender").description("성별"),
                                 fieldWithPath("birthday").description("생년월일(YYYY-MM-DD)"),
-                                fieldWithPath("locationName").description("지역명"),
-                                fieldWithPath("height").description("키"),
-                                fieldWithPath("body_type").description("체형"),
-                                fieldWithPath("job").description("직업"),
-                                fieldWithPath("interests").description("관심사"),
-                                fieldWithPath("myself").description("자기소개")
+                                fieldWithPath("location").description("지역 ID"),
+                                fieldWithPath("height").description("키 (cm)"),
+                                fieldWithPath("bodyType").description("체형 ID"),
+                                fieldWithPath("job").description("직업 ID"),
+                                fieldWithPath("interests").description("관심사 ID 리스트"),
+                                fieldWithPath("introduction").description("자기소개")
                         ),
                         responseFields(
                                 fieldWithPath("code").description("성공 코드"),
@@ -110,13 +110,13 @@ public class MemberProfileDocs extends BaseRestDocsTest {
                                 fieldWithPath("result.name").description("이름"),
                                 fieldWithPath("result.nickname").description("닉네임"),
                                 fieldWithPath("result.address").description("주소"),
-                                fieldWithPath("result.height").description("키"),
-                                fieldWithPath("result.body_type").description("체형"),
+                                fieldWithPath("result.height").description("키 (cm)"),
+                                fieldWithPath("result.bodyType").description("체형"),
                                 fieldWithPath("result.job").description("직업"),
                                 fieldWithPath("result.interests").description("관심사 목록"),
                                 fieldWithPath("result.interests[].id").description("관심사 ID"),
                                 fieldWithPath("result.interests[].name").description("관심사 이름"),
-                                fieldWithPath("result.myself").description("자기소개")
+                                fieldWithPath("result.introduction").description("자기소개")
                         )
                 ));
     }
@@ -260,11 +260,11 @@ public class MemberProfileDocs extends BaseRestDocsTest {
                 "새로운 닉네임",
                 null,
                 null,
-                "부산",
+                1,
                 null,
                 null,
                 null,
-                List.of("독서", "여행", "게임"),
+                List.of(1L, 2L, 3L),
                 "새로운 자기소개"
         );
         
@@ -286,12 +286,12 @@ public class MemberProfileDocs extends BaseRestDocsTest {
                                 fieldWithPath("nickname").description("닉네임 (선택)").optional(),
                                 fieldWithPath("gender").description("성별 (선택)").optional(),
                                 fieldWithPath("birthday").description("생년월일(YYYYMMDD) (선택)").optional(),
-                                fieldWithPath("locationName").description("지역명 (선택)").optional(),
-                                fieldWithPath("height").description("키 (선택)").optional(),
-                                fieldWithPath("body_type").description("체형 (선택)").optional(),
-                                fieldWithPath("job").description("직업 (선택)").optional(),
-                                fieldWithPath("interests").description("관심사 (선택)").optional(),
-                                fieldWithPath("myself").description("자기소개 (선택)").optional()
+                                fieldWithPath("location").description("지역 ID (선택)").optional(),
+                                fieldWithPath("height").description("키 (cm) (선택)").optional(),
+                                fieldWithPath("bodyType").description("체형 ID (선택)").optional(),
+                                fieldWithPath("job").description("직업 ID (선택)").optional(),
+                                fieldWithPath("interests").description("관심사 ID 리스트 (선택)").optional(),
+                                fieldWithPath("introduction").description("자기소개 (선택)").optional()
                         ),
                         responseFields(
                                 fieldWithPath("code").description("성공 코드"),
@@ -309,12 +309,12 @@ public class MemberProfileDocs extends BaseRestDocsTest {
                 "길동",                 // nickname
                 "남성",                 // gender
                 "1990-01-01",             // birthday
-                "서울",                  // locationName
-                "180",                  // height
-                "athletic",             // body_type
-                "개발자",               // job
-                List.of("음악", "여행", "영화"), // interests
-                "자기소개글 예시"        // myself
+                1,                  // location
+                180,                  // height
+                1,             // bodyType
+                1,               // job
+                List.of(1L, 2L, 3L), // interests
+                "자기소개글 예시"        // introduction
         );
     }
 
@@ -328,11 +328,11 @@ public class MemberProfileDocs extends BaseRestDocsTest {
                 "홍길동",                   // name
                 "길동이",                   // nickname
                 "서울",                      // locationName
-                "180",                     // height
-                "보통",                    // body_type
+                180,                     // height
+                "보통",                    // bodyType
                 "개발자",                  // job
                 interests,                 // interests with id
-                "안녕하세요, 홍길동입니다."   // myself
+                "안녕하세요, 홍길동입니다."   // introduction
         );
     }
 }

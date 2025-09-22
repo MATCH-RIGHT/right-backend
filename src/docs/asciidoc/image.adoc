@@ -90,25 +90,25 @@ include::{snippets}/image-get-all/http-response.adoc[]
 include::{snippets}/image-get-all/response-fields.adoc[]
 
 
-[[resources-image-update]]
-=== 이미지 업데이트
+[[resources-image-reorder]]
+=== 이미지 순서 변경
 
 ==== HTTP request
 
-include::{snippets}/image-update/http-request.adoc[]
+include::{snippets}/image-reorder/http-request.adoc[]
 
 ==== request-header 설명
-include::{snippets}/image-update/request-headers.adoc[]
+include::{snippets}/image-reorder/request-headers.adoc[]
 
-==== path-parameters 설명
-include::{snippets}/image-update/path-parameters.adoc[]
+==== request-body 설명
+include::{snippets}/image-reorder/request-fields.adoc[]
 
 ==== HTTP response
 
-include::{snippets}/image-update/http-response.adoc[]
+include::{snippets}/image-reorder/http-response.adoc[]
 
 ==== response-body 설명
-include::{snippets}/image-update/response-fields.adoc[]
+include::{snippets}/image-reorder/response-fields.adoc[]
 
 
 [[resources-image-delete]]
