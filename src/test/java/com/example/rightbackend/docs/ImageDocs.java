@@ -185,7 +185,9 @@ public class ImageDocs extends BaseRestDocsTest {
                                 fieldWithPath("code").description("성공 코드"),
                                 fieldWithPath("result.features").description("탐지된 얼굴 특징 리스트"),
                                 fieldWithPath("result.features[].id").description("얼굴 특징 ID"),
-                                fieldWithPath("result.features[].name").description("얼굴 특징 이름")
+                                fieldWithPath("result.features[].name").description("얼굴 특징 이름"),
+                                fieldWithPath("result.features[].featureType").description("특징 타입").optional(),
+                                fieldWithPath("result.features[].featureValueId").description("특징 값 ID").optional()
                         )
                 ));
     }
@@ -282,5 +284,72 @@ public class ImageDocs extends BaseRestDocsTest {
         featureMap.put("id", id);
         featureMap.put("name", name);
         return featureMap;
+    }
+
+    @Test
+    @DisplayName("API - 얼굴 특징 ID 조회")
+    void getFaceFeatureIds() throws Exception {
+        java.util.Map<String, List<Integer>> featureIds = new java.util.HashMap<>();
+        featureIds.put("FACE_SHAPE", Arrays.asList(1, 2));
+        featureIds.put("ANIMAL_LOOK", Arrays.asList(1));
+        featureIds.put("EYE_TYPE", Arrays.asList(3));
+
+        com.example.rightbackend.rekognition.controller.dto.response.FaceFeatureIdsResponse faceFeatureIdsResponse =
+            new com.example.rightbackend.rekognition.controller.dto.response.FaceFeatureIdsResponse(featureIds);
+
+        SuccessResponse response = SuccessResponse.of(ImageSuccess.MY_FEATURE_GET_SUCCESS, faceFeatureIdsResponse);
+        doReturn(response).when(imageController).getFaceFeatureIds(any());
+
+        this.mockMvc.perform(get("/api/image/get-my-feature-ids")
+                        .header("Authorization", GIVEN_ACCESS_TOKEN))
+                .andExpect(status().isOk())
+                .andDo(document("feature-get-ids",
+                        requestHeaders(
+                                headerWithName("Authorization").description("액세스 토큰")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").description("성공 코드"),
+                                fieldWithPath("result.featureIds").description("카테고리별 특징 ID 맵"),
+                                fieldWithPath("result.featureIds.FACE_SHAPE").description("얼굴형 ID 목록 (1:긴얼굴형, 2:계란형, 3:둥근형, 4:역삼각형, 5:각진형)").optional(),
+                                fieldWithPath("result.featureIds.ANIMAL_LOOK").description("동물상 ID 목록 (1:고양이상, 2:강아지상, 3:곰돌이상, 4:토끼상, 5:여우상, 6:쿼카상, 7:공룡상, 8:말상)").optional(),
+                                fieldWithPath("result.featureIds.EYE_TYPE").description("눈 타입 ID 목록 (1:올라간눈, 2:내려간눈, 3:동그란눈, 4:찢어진눈)").optional()
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("API - 얼굴 특징 ID 저장")
+    void saveFaceFeaturesByIds() throws Exception {
+        com.example.rightbackend.rekognition.controller.dto.request.FaceFeatureIdsRequest request =
+            new com.example.rightbackend.rekognition.controller.dto.request.FaceFeatureIdsRequest();
+        java.util.Map<String, List<Integer>> featureIds = new java.util.HashMap<>();
+        featureIds.put("FACE_SHAPE", Arrays.asList(1, 2));
+        featureIds.put("ANIMAL_LOOK", Arrays.asList(1));
+        featureIds.put("EYE_TYPE", Arrays.asList(1, 3));
+        request.setFeatureIds(featureIds);
+
+        SuccessResponse response = SuccessResponse.of(ImageSuccess.MY_FEATURE_UPLOAD_SUCCESS);
+        doReturn(response).when(imageController).saveFaceFeaturesByIds(any(), any());
+
+        this.mockMvc.perform(post("/api/image/save-feature-ids")
+                        .header("Authorization", GIVEN_ACCESS_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andDo(document("feature-save-ids",
+                        requestHeaders(
+                                headerWithName("Authorization").description("액세스 토큰")
+                        ),
+                        requestFields(
+                                fieldWithPath("featureIds").description("카테고리별 특징 ID 맵"),
+                                fieldWithPath("featureIds.FACE_SHAPE").description("얼굴형 ID 목록").optional(),
+                                fieldWithPath("featureIds.ANIMAL_LOOK").description("동물상 ID 목록").optional(),
+                                fieldWithPath("featureIds.EYE_TYPE").description("눈 타입 ID 목록").optional()
+                        ),
+                        responseFields(
+                                fieldWithPath("code").description("성공 코드"),
+                                fieldWithPath("result").description("응답 데이터").optional()
+                        )
+                ));
     }
 }

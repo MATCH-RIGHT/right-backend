@@ -8,6 +8,7 @@ import com.example.rightbackend.global.exception.RestApiException;
 import com.example.rightbackend.global.response.error.MatchingFilterError;
 import com.example.rightbackend.global.response.error.MemberError;
 import com.example.rightbackend.matching.filter.controller.dto.request.MatchingFilterRequest;
+import com.example.rightbackend.matching.filter.controller.dto.request.MatchingFilterIdsRequest;
 import com.example.rightbackend.matching.filter.domain.MatchingFilter;
 import com.example.rightbackend.matching.filter.domain.Region;
 import com.example.rightbackend.matching.filter.domain.repository.MatchingFilterRepository;
@@ -80,6 +81,44 @@ public class MatchingFilterService {
                 idealFaceFeaturesBitmask = idealFaceFeaturesBitmask.setBit(featureIndex);
             }
             
+            filter.setIdealFaceFeaturesBitmask(idealFaceFeaturesBitmask);
+        } else {
+            filter.setIdealFaceFeaturesBitmask(BigInteger.ZERO);
+        }
+
+        return matchingFilterRepository.save(filter);
+    }
+
+    @Transactional
+    public MatchingFilter createOrUpdateMatchingFilterWithIds(@Login LoginMember loginMember, MatchingFilterIdsRequest request) {
+        Member member = getMember(loginMember);
+        MemberProfile memberProfile = member.getMemberProfile();
+
+        if (request.minAge() != null && request.maxAge() != null && request.minAge() > request.maxAge()) {
+            throw new RestApiException(MatchingFilterError.INVALID_AGE_RANGE);
+        }
+
+        Region region = null;
+        if (request.regionId() != null) {
+            region = regionRepository.findById(request.regionId())
+                    .orElseThrow(() -> new RestApiException(MatchingFilterError.NULL_REGION));
+        }
+
+        Optional<MatchingFilter> existingFilterOpt = matchingFilterRepository.findByMemberProfile(memberProfile);
+        MatchingFilter filter;
+
+        if (existingFilterOpt.isPresent()) {
+            filter = existingFilterOpt.get();
+        } else {
+            filter = MatchingFilter.of(memberProfile);
+        }
+
+        filter.setMinAge(request.minAge());
+        filter.setMaxAge(request.maxAge());
+        filter.setRegion(region);
+
+        if (request.idealFaceFeatureIds() != null && !request.idealFaceFeatureIds().isEmpty()) {
+            BigInteger idealFaceFeaturesBitmask = IdealFaceFeatureUtil.convertIdsToBitmask(request.idealFaceFeatureIds());
             filter.setIdealFaceFeaturesBitmask(idealFaceFeaturesBitmask);
         } else {
             filter.setIdealFaceFeaturesBitmask(BigInteger.ZERO);

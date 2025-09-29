@@ -5,7 +5,9 @@ import com.example.rightbackend.global.config.resolver.Login;
 import com.example.rightbackend.global.response.SuccessResponse;
 import com.example.rightbackend.global.response.success.MatchingFilterSuccess;
 import com.example.rightbackend.matching.filter.controller.dto.request.MatchingFilterRequest;
+import com.example.rightbackend.matching.filter.controller.dto.request.MatchingFilterIdsRequest;
 import com.example.rightbackend.matching.filter.controller.dto.response.MatchingFilterResponse;
+import com.example.rightbackend.matching.filter.controller.dto.response.MatchingFilterIdsResponse;
 import com.example.rightbackend.matching.filter.domain.MatchingFilter;
 import com.example.rightbackend.matching.filter.service.MatchingFilterService;
 import lombok.RequiredArgsConstructor;
@@ -31,5 +33,19 @@ public class MatchingFilterController {
             @RequestBody MatchingFilterRequest request) {
         MatchingFilter matchingFilter = matchingFilterService.createOrUpdateMatchingFilter(loginMember, request);
         return SuccessResponse.of(MatchingFilterSuccess.UPDATE_MATCHING_FILTER_SUCCESS, MatchingFilterResponse.from(matchingFilter));
+    }
+
+    @GetMapping("/v2")
+    public ResponseEntity<SuccessResponse<MatchingFilterIdsResponse>> getMatchingFilterWithIds(@Login LoginMember loginMember) {
+        MatchingFilter matchingFilter = matchingFilterService.getMatchingFilter(loginMember);
+        return SuccessResponse.of(MatchingFilterSuccess.GET_MATCHING_FILTER_SUCCESS, MatchingFilterIdsResponse.from(matchingFilter));
+    }
+
+    @PostMapping("/v2")
+    public ResponseEntity<SuccessResponse<MatchingFilterIdsResponse>> createOrUpdateMatchingFilterWithIds(
+            @Login LoginMember loginMember,
+            @RequestBody MatchingFilterIdsRequest request) {
+        MatchingFilter matchingFilter = matchingFilterService.createOrUpdateMatchingFilterWithIds(loginMember, request);
+        return SuccessResponse.of(MatchingFilterSuccess.UPDATE_MATCHING_FILTER_SUCCESS, MatchingFilterIdsResponse.from(matchingFilter));
     }
 }
