@@ -8,6 +8,8 @@ import com.example.rightbackend.image.controller.dto.request.ImageReorderRequest
 import com.example.rightbackend.image.controller.dto.response.ImageListResponse;
 import com.example.rightbackend.image.controller.dto.response.ImageResponse;
 import com.example.rightbackend.image.service.ImageService;
+import com.example.rightbackend.rekognition.controller.dto.request.FaceFeatureIdsRequest;
+import com.example.rightbackend.rekognition.controller.dto.response.FaceFeatureIdsResponse;
 import com.example.rightbackend.rekognition.controller.dto.response.FaceFeatureListResponse;
 import com.example.rightbackend.rekognition.controller.dto.response.FaceFeatureResponse;
 import com.example.rightbackend.rekognition.service.RekognitionService;
@@ -73,5 +75,19 @@ public class ImageController {
         List<Map<String, Object>> faceAnalysisResponse = rekognitionService.getFaceFeature(loginMember);
         FaceFeatureResponse response = new FaceFeatureResponse(faceAnalysisResponse);
         return SuccessResponse.of(ImageSuccess.MY_FEATURE_GET_SUCCESS, response);
+    }
+
+    @GetMapping("/get-my-feature-ids")
+    public ResponseEntity<SuccessResponse<FaceFeatureIdsResponse>> getFaceFeatureIds(@Login LoginMember loginMember) {
+        Map<String, List<Integer>> featureIds = rekognitionService.getFaceFeatureIds(loginMember);
+        FaceFeatureIdsResponse response = new FaceFeatureIdsResponse(featureIds);
+        return SuccessResponse.of(ImageSuccess.MY_FEATURE_GET_SUCCESS, response);
+    }
+
+    @PostMapping("/save-feature-ids")
+    public ResponseEntity<SuccessResponse<Void>> saveFaceFeaturesByIds(@Login LoginMember loginMember,
+                                                                       @RequestBody FaceFeatureIdsRequest request) {
+        rekognitionService.saveFaceFeaturesByIds(loginMember, request.getFeatureIds());
+        return SuccessResponse.of(ImageSuccess.MY_FEATURE_UPLOAD_SUCCESS);
     }
 }
